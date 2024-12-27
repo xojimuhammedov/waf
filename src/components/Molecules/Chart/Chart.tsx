@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { twMerge } from 'tailwind-merge';
+import * as echarts from 'echarts';
 
 interface ChartProps {
   height?: string | number;
@@ -22,7 +23,7 @@ interface ChartProps {
 }
 
 const Chart: FC<ChartProps> = ({
-  height = '80%',
+  height = '100%',
   width,
   className,
   legends = [],
@@ -30,41 +31,34 @@ const Chart: FC<ChartProps> = ({
   xAxis,
   type
 }) => {
+  const barData: any = [55, 20, 36];
+
+  const barColors: any = [
+    ['rgba(28, 209, 237, 0.27)', 'rgba(32, 32, 32, 0.00)'],
+    ['rgba(136, 60, 12, 0.50)', 'rgba(32, 32, 32, 0.00)'],
+    ['rgba(67, 104, 19, 0.50)', 'rgba(32, 32, 32, 0.00)']
+  ];
+
+  const seriesData = (data: any, colors: any) => {
+    return data.map((val: any, idx: any) => ({
+      value: val,
+      itemStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: colors[idx][0] },
+          { offset: 1, color: colors[idx][1] }
+        ])
+      }
+    }));
+  };
+
+  const chartData = seriesData(barData, barColors);
+
   const options = {
-    title: {
-      text: "",
-      left: 'center',
-      textStyle: {
-        color: '#ffffff',
-        fontSize: 16
-      }
-    },
-    tooltip: {
-      trigger: 'item'
-    },
-    legend: {
-      show: true,
-      bottom: '0%',
-      textStyle: {
-        color: '#ffffff'
-      }
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '15%',
-      containLabel: true
-    },
+    tooltip: {},
     xAxis: {
-      type: 'category',
-      data: ['datagaze.uz', 'waf.datagaze.uz', 'lp.eset.lab'],
+      data: ['Category1', 'Category2', 'Category3'],
       axisLabel: {
-        color: '#ffffff'
-      },
-      axisLine: {
-        lineStyle: {
-          color: '#ffffff'
-        }
+        show: false
       }
     },
     yAxis: {
@@ -78,46 +72,9 @@ const Chart: FC<ChartProps> = ({
     },
     series: [
       {
-        type: 'pictorialBar',
-        data: [
-          {
-            value: 30,
-            symbol: 'rect',
-            symbolSize: [80, 3], // Ustunning yuqori qismini aniqlash (eni, balandligi)
-            symbolOffset: [0, -70], // Ustunning yuqorisiga joylash
-            itemStyle: {
-              color: '#0057FF' // Yuqori qismini ranglash
-            }
-          },
-          {
-            value: 20,
-            symbol: 'rect',
-            symbolSize: [80, 3],
-            symbolOffset: [0, -50],
-            itemStyle: {
-              color: '#FF5733'
-            }
-          },
-          {
-            value: 25,
-            symbol: 'rect',
-            symbolSize: [80, 3],
-            symbolOffset: [0, -60],
-            itemStyle: {
-              color: '#00FF00'
-            }
-          }
-        ],
-        z: 10 // Yuqori qatlamda joylashadi
-      },
-      {
+        name: 'Series',
         type: 'bar',
-        data: [30, 20, 25], // Umumiy balandliklar
-        barWidth: '100%',
-        itemStyle: {
-          color: '#131313', // Asosiy ustun rangi (gradient yoki oddiy rang)
-          opacity: 0.6
-        }
+        data: chartData
       }
     ]
   };

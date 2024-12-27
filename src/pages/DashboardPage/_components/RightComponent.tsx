@@ -18,34 +18,10 @@ function RightComponent() {
         </p>
         <LineChart
           xAxis={{ data: process }}
-          height="180px"
+          height="210px"
           type="bar"
           className={'text-base'}
-          series={[
-            {
-              data: [15, 36, 45],
-              itemStyle: {
-                color: {
-                  type: 'linear',
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [
-                    {
-                      offset: 1,
-                      color: '#0C5B74'
-                    },
-                    {
-                      offset: 1,
-                      color: '#000'
-                    }
-                  ],
-                  global: false
-                }
-              }
-            }
-          ]}
+          series={[]}
         />
       </div>
       <div className="mt-9">

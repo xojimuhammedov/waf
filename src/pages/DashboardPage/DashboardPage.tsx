@@ -6,13 +6,13 @@ const DashboardPage = () => {
   return (
     <div className="bg-[#131313] py-8">
       <div className="flex justify-between">
-        <div className="w-1/3 dashboard-left">
+        <div className="w-1/3 dashboard-left px-6 ">
           <LeftComponent />
         </div>
         <div className="w-full px-6">
           <BottomComponent />
         </div>
-        <div className="w-1/3 dashboard-right">
+        <div className="w-1/3 dashboard-right px-6">
           <RightComponent />
         </div>
       </div>
