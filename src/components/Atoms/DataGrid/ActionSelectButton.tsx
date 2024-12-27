@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import MyDropdown, { DropdownItemWrapper } from "../MyDropdown";
-import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Dublicate from "assets/icons/Duplicate";
 import Delete from "assets/icons/Delete";
@@ -26,27 +25,27 @@ interface ActionSelectButtonProps {
  * - Utilizes custom icons for visual representation of the file formats.
  */
 const ActionSelectButton = ({ actions = [], items = [] }: ActionSelectButtonProps) => {
-  const { t } = useTranslation();
+  
   const [open, setOpen] = useState(false);
 
   const menuItems = [
     {
-      label: t("Marge duplicates"),
+      label: "Marge duplicates",
       icon: <Dublicate />
     },
     {
-      label: t("Delete selected"),
+      label: "Delete selected",
       icon: <Delete />
     }
   ];
 
   return (
     isEmpty(items) ?
-      <Tooltip content={t('No items selected')}>
+      <Tooltip content={'No items selected'}>
         <MyDropdown
           buttonProps={{
             disabled: true,
-            children: t("Action for selected items"),
+            children: "Action for selected items",
             variant: "secondary",
             className: "w-max",
             startIcon: <CheckSquare />,
@@ -58,14 +57,14 @@ const ActionSelectButton = ({ actions = [], items = [] }: ActionSelectButtonProp
         open={open}
         setOpen={setOpen}
         buttonProps={{
-          children: t("Action for selected items"),
+          children: "Action for selected items",
           variant: "secondary",
           className: "w-max",
           startIcon: <CheckSquare />,
           endIcon: open ? <ChevronUp /> : <ChevronDown />
         }}>
         <DropdownItemWrapper className="cursor-default">
-          <p className="text-c-xs-p text-text-subtle">{t("Actions")}</p>
+          <p className="text-c-xs-p text-text-subtle">{"Actions"}</p>
         </DropdownItemWrapper>
         {actions.map((btn, i) => (
           <DropdownItemWrapper className={`flex w-full items-center gap-2 text-${btn.type}`} key={i} onClick={($e) => {

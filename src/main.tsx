@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom/client';
 import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './assets/css/app.css';
-import 'i18n';
 import { AuthProvider } from 'context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

@@ -8,7 +8,7 @@ const toRGB = (value) => {
   return parseColor(value).color.join(' ');
 };
 
-/** @type {import('tailwindcss').Config} */
+/** @type {impor'tailwindcss'.Config} */
 module.exports = {
   content: [
     './src/**/*.{js,jsx,ts,tsx}',

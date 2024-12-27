@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MyDropdown, { DropdownItemWrapper } from '../MyDropdown';
-import { useTranslation } from 'react-i18next';
+
 import { IAction } from '../../../interfaces/action.interface';
 import MyDropdownTwo from '../MyDropdown/MyDropdownTwo';
 import EllipsisVertical from 'assets/icons/EllipsisVertical';
@@ -27,7 +27,7 @@ enum FilterActionButtonTypeEnum {
  * - Utilizes custom icons for visual representation of the file formats.
  */
 const RowActions = ({ actions = [], row }: RowActionProps) => {
-  const { t } = useTranslation();
+  
   const [open, setOpen] = useState(false);
 
   return (

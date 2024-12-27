@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DropdownItemWrapper } from '../MyDropdown';
-import { useTranslation } from 'react-i18next';
+
 import { Download, ChevronDown, ChevronUp } from 'lucide-react';
 import RoundedShape from '../RoundedShape';
 import ExcelSvg from 'assets/icons/ExcelSvg';
@@ -18,16 +18,16 @@ import MyDropdownTwo from '../MyDropdown/MyDropdownTwo';
  * - Utilizes custom icons for visual representation of the file formats.
  */
 const ExportButton = ({ onSubmit }: any) => {
-  const { t } = useTranslation();
+  
   const [open, setOpen] = useState(false);
 
   const menuItems = [
     {
-      label: t('Export as a .xls'),
+      label: 'Export as a .xls',
       icon: <ExcelSvg />
     }
     // {
-    //   label: t('Export as a .csv'),
+    //   label: 'Export as a .csv',
     //   icon: <CsvSvg />
     // }
   ];
@@ -37,7 +37,7 @@ const ExportButton = ({ onSubmit }: any) => {
       open={open}
       setOpen={setOpen}
       buttonProps={{
-        children: t('Export all data'),
+        children: 'Export all data',
         variant: 'secondary',
         className: 'w-max',
         startIcon: <Download />,

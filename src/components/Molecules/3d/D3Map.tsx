@@ -34,6 +34,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     const path = d3.geoPath().projection(projection);
 
     d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json').then((worldData: any) => {
+      // @ts-ignore
       const countries: any = topojson.feature(worldData, worldData.objects.countries).features;
 
       svg
@@ -52,7 +53,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         })
         .on('mouseout', function (d) {
           //@ts-ignore
-          d3.select(this).attr('class', (d) =>
+          d3.select(this).attr('class', (d: any) =>
             d.id === '860' ? 'country country-target' : 'country'
           );
         });

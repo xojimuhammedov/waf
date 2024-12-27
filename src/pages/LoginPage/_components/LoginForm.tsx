@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
 import { useForm } from 'react-hook-form';
 import { MyInput } from 'components/Atoms/Form';
-import { useTranslation } from 'react-i18next';
 import MyButton from 'components/Atoms/MyButton/MyButton';
 import React, { useState } from 'react';
 import { useAuth } from 'hooks/useAuth';
@@ -13,13 +12,13 @@ import { Eye, EyeOff } from 'lucide-react';
 import ArrowRight from 'assets/icons/ArrowRight';
 
 const LoginForm = () => {
-  const { t } = useTranslation();
+
   const auth = useAuth();
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const schema = object().shape({
-    username: string().required(t('username is required')),
-    password: string().required(t('password is required'))
+    username: string().required('Username is required'),
+    password: string().required('Password is required')
   });
 
   const {
@@ -38,7 +37,7 @@ const LoginForm = () => {
     //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
 
     auth.login({ username, password }, () => {
-      toast.error(t('Username or password error!'));
+      toast.error('Username or password error!');
     });
   };
   return (
@@ -47,7 +46,7 @@ const LoginForm = () => {
         <MyInput
           error={Boolean(errors?.username?.message)}
           helperText={errors?.username?.message}
-          placeholder={t('username')}
+          placeholder={'username'}
           label="Username*"
           {...register('username')}
           startIcon={
@@ -62,7 +61,7 @@ const LoginForm = () => {
           error={Boolean(errors?.password?.message)}
           helperText={errors?.password?.message}
           autoComplete="new-password"
-          placeholder={t('password')}
+          placeholder={'password'}
           {...register('password')}
           label="Password*"
           type={showPassword ? 'text' : 'password'}
@@ -89,7 +88,7 @@ const LoginForm = () => {
         style={{ background: '#33C481' }}
         className="m-auto flex h-[40px] w-[170px] w-full items-center justify-center text-white">
         {auth.loading ? (
-          t('Kirish')
+          'Kirish'
         ) : (
           <div className="text-center">
             <div role="status">

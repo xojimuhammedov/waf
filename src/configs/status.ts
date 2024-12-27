@@ -1,25 +1,25 @@
-import { useTranslation } from 'react-i18next';
 
-const { t } = useTranslation();
+
+
 
 const statusData = [
   {
     id: 1,
-    name: t('come'),
+    name: 'come',
     value: true,
     visible: true,
     title: 'isAbsent'
   },
   {
     id: 2,
-    name: t('ComeLate'),
+    name: 'ComeLate',
     value: true,
     visible: true,
     title: 'isLateIn'
   },
   {
     id: 3,
-    name: t('Came on time'),
+    name: 'Came on time',
     value: false,
     visible: true,
     title: 'isLateIn'

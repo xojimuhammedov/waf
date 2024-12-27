@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+
 import MyDropdown, { DropdownItemWrapper } from '../MyDropdown';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { paramsStrToObj } from 'utils/helper';
@@ -19,7 +19,6 @@ import { paramsStrToObj } from 'utils/helper';
  */
 
 const ColumnsButton = () => {
-  const { t } = useTranslation();
   const location = useLocation();
   const paramsValue: any = paramsStrToObj(location.search);
   const locationValue = paramsValue?.IsLateIn ? 'IsLateIn' : '/';
@@ -52,7 +51,7 @@ const ColumnsButton = () => {
   const statusData = [
     {
       id: 1,
-      title: t('All them'),
+      title: 'All them',
       label: 'black-radio',
       className: 'text-black-600 focus:ring-black-500 dark:focus:ring-black-600',
       value: '/',
@@ -60,7 +59,7 @@ const ColumnsButton = () => {
     },
     {
       id: 2,
-      title: t('come'),
+      title: 'come',
       label: 'red-radio',
       className: 'text-red-600 focus:ring-red-500 dark:focus:ring-red-600',
       value: 'isAbsent=true',
@@ -68,7 +67,7 @@ const ColumnsButton = () => {
     },
     {
       id: 3,
-      title: t('Came on time'),
+      title: 'Came on time',
       label: 'green-radio',
       className: 'text-green-600 focus:ring-green-500 dark:focus:ring-green-600',
       value: 'IsLateIn=false',
@@ -76,7 +75,7 @@ const ColumnsButton = () => {
     },
     {
       id: 4,
-      title: t('ComeLate'),
+      title: 'ComeLate',
       label: 'orange-radio',
       className: 'text-orange-500 focus:ring-orange-500 dark:focus:ring-orange-600',
       value: 'isLateIn=true',
@@ -89,14 +88,14 @@ const ColumnsButton = () => {
       open={open}
       setOpen={setOpen}
       buttonProps={{
-        children: t('Status Filters'),
+        children: 'Status Filters',
         variant: 'secondary',
         className: 'w-max dark:bg-bg-button',
         startIcon: <Filter />,
         endIcon: open ? <ChevronUp /> : <ChevronDown />
       }}>
       <DropdownItemWrapper className="cursor-default">
-        <p className="text-c-xs-p text-text-subtle">{t('Select column to show')}</p>
+        <p className="text-c-xs-p text-text-subtle">{'Select column to show'}</p>
       </DropdownItemWrapper>
       <div ref={dropdownRef} className="dark:bg-bg-button">
         <DropdownItemWrapper className="flex flex-row flex-col gap-4">

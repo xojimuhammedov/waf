@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import 'filepond/dist/filepond.min.css';
-import { useTranslation } from 'react-i18next';
+
 import { FilePondFile } from 'filepond';
 import { twMerge } from 'tailwind-merge';
 
@@ -46,7 +46,7 @@ registerPlugin(FilePondPluginFileValidateType);
 type FormInputRef = React.ComponentPropsWithRef<'input'>['ref'];
 
 const MyFilePond = forwardRef((props: any, ref: FormInputRef) => {
-  const { t } = useTranslation();
+  
   const {
     error = false,
     isMulti = false,
@@ -54,7 +54,7 @@ const MyFilePond = forwardRef((props: any, ref: FormInputRef) => {
     accept = [],
     server,
     name,
-    label = t('Drag & Drop your files or Browse'),
+    label = 'Drag & Drop your files or Browse',
     className = '',
     onChange
   } = props;

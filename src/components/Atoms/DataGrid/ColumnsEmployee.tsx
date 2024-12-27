@@ -1,7 +1,7 @@
 import MyButton from '../MyButton/MyButton';
 import { useEffect, useRef, useState } from 'react';
 import { Columns, ChevronDown, ChevronUp, Filter, Search } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+
 import MyDropdown, { DropdownItemWrapper } from '../MyDropdown';
 import { MyCheckbox, MyInput } from '../Form';
 import { useLocation, useSearchParams } from 'react-router-dom';
@@ -28,7 +28,7 @@ import storage from 'services/storage';
  */
 
 const ColumnsEmployee = ({ setData, setEmployee, employee }: any) => {
-  const { t } = useTranslation();
+  
   const userDataString: string | null = storage.get('userData');
   const companyId: any = userDataString ? JSON.parse(userDataString) : {};
   const location = useLocation();
@@ -126,14 +126,14 @@ const ColumnsEmployee = ({ setData, setEmployee, employee }: any) => {
       open={open}
       setOpen={setOpen}
       buttonProps={{
-        children: t('Select Employees'),
+        children: 'Select Employees',
         variant: 'secondary',
         className: 'w-max dark:bg-bg-button employee-menu',
         startIcon: <Filter />,
         endIcon: open ? <ChevronUp /> : <ChevronDown />
       }}>
       <DropdownItemWrapper className="cursor-default">
-        <p className="mb-2 text-c-xs-p text-text-subtle">{t('Select column to show')}</p>
+        <p className="mb-2 text-c-xs-p text-text-subtle">{'Select column to show'}</p>
         <MyInput
           onKeyUp={(event) => {
             if (event.key === KeyTypeEnum.enter) {
@@ -144,7 +144,7 @@ const ColumnsEmployee = ({ setData, setEmployee, employee }: any) => {
           }}
           startIcon={<Search className="stroke-text-muted" onClick={handleSearch} />}
           className="w-full dark:bg-bg-input-dark"
-          placeholder={t('Search...')}
+          placeholder={'Search...'}
           size="small"
           defaultValue={get(filters, 'search')}
         />
@@ -184,7 +184,7 @@ const ColumnsEmployee = ({ setData, setEmployee, employee }: any) => {
             variant="secondary"
             size="base"
             className="flex-1">
-            {t('Reset')}
+            {'Reset'}
           </MyButton>
           <MyButton
             onClick={onSubmit}
@@ -192,7 +192,7 @@ const ColumnsEmployee = ({ setData, setEmployee, employee }: any) => {
             size="base"
             variant="primary"
             className="flex-1">
-            {t('Apply')}
+            {'Apply'}
           </MyButton>
         </div>
       </div>

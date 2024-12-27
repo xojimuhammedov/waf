@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+
 import { twMerge } from 'tailwind-merge';
 
 export type BreadCrumbItemType = {
@@ -25,7 +25,7 @@ interface MyBreadCrumbProps {
  */
 
 const MyBreadCrumb: FC<MyBreadCrumbProps> = ({ items, pageTitle }) => {
-  const { t } = useTranslation();
+  
 
   const generalStyles = [
     'inline-flex items-center text-c-m text-text-subtle hover:text-text-base dark:text-subtext-color-dark'
@@ -37,7 +37,7 @@ const MyBreadCrumb: FC<MyBreadCrumbProps> = ({ items, pageTitle }) => {
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li className="inline-flex items-center">
           <NavLink to="/" className={twMerge(generalStyles)}>
-            {t('Dashboard')}
+            {'Dashboard'}
           </NavLink>
         </li>
 

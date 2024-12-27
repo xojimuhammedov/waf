@@ -1,9 +1,9 @@
 import MyButton from 'components/Atoms/MyButton/MyButton';
 import MyModal from 'components/Atoms/MyModal';
-import { useTranslation } from 'react-i18next';
+
 
 function AlertModal({ onClose, show, handleLogOut }: any) {
-  const { t } = useTranslation();
+  
 
   return (
     <>
@@ -17,16 +17,16 @@ function AlertModal({ onClose, show, handleLogOut }: any) {
           children: (
             <>
               <h2 className="text-center text-xl font-semibold">
-                {t('Are you sure you want to logout this profile?')}
+                {'Are you sure you want to logout this profile?'}
               </h2>
               <div className="mb-[5px] mt-6 flex w-full justify-center gap-4">
                 <MyButton onClick={handleLogOut} type="submit" variant="primary">
                   {' '}
-                  {t('Logout')}
+                  {'Logout'}
                 </MyButton>
                 <MyButton className="w-[98px]" onClick={onClose} variant="secondary">
                   {' '}
-                  {t('Cancel')}
+                  {'Cancel'}
                 </MyButton>
               </div>
             </>

@@ -1,7 +1,7 @@
 import MyButton from '../MyButton/MyButton';
 import { useEffect, useRef, useState } from 'react';
 import { Columns, ChevronDown, ChevronUp } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+
 import MyDropdown, { DropdownItemWrapper } from '../MyDropdown';
 import useTableContext from 'providers/TableProvider/useTableContext';
 import { MyCheckbox } from '../Form';
@@ -21,7 +21,7 @@ import { TABLE_ACTION_TYPES } from 'providers/TableProvider/useTableProvider';
  */
 
 const CustomizeColumnsButton = () => {
-  const { t } = useTranslation();
+  
 
   const [open, setOpen] = useState(false);
   const { columns, columnHash, dispatch } = useTableContext();
@@ -48,14 +48,14 @@ const CustomizeColumnsButton = () => {
       open={open}
       setOpen={setOpen}
       buttonProps={{
-        children: t('Customize columns'),
+        children: 'Customize columns',
         variant: 'secondary',
         className: 'w-max dark:bg-bg-button',
         startIcon: <Columns />,
         endIcon: open ? <ChevronUp /> : <ChevronDown />
       }}>
       <DropdownItemWrapper className="cursor-default">
-        <p className="text-c-xs-p text-text-subtle">{t('Select column to show')}</p>
+        <p className="text-c-xs-p text-text-subtle">{'Select column to show'}</p>
       </DropdownItemWrapper>
       <div ref={dropdownRef} className="dark:bg-bg-button">
         {columns.map((column: any, i: number) => (
@@ -90,7 +90,7 @@ const CustomizeColumnsButton = () => {
             variant="secondary"
             size="base"
             className="flex-1">
-            {t('Reset')}
+            {'Reset'}
           </MyButton>
           <MyButton
             onClick={() => {
@@ -103,7 +103,7 @@ const CustomizeColumnsButton = () => {
             variant="primary"
             size="base"
             className="flex-1">
-            {t('Apply')}
+            {'Apply'}
           </MyButton>
         </div>
       </div>

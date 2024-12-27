@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
-import MyDropdown, { DropdownItemWrapper } from "../MyDropdown";
-import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronUp, Filter } from "lucide-react";
-import { IFilter } from "../../../interfaces/filter.interface";
-import { FilterTypeEnum } from "../../../enums/filter-type.enum";
-import MyButton from "../MyButton";
-import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router-dom";
-import { isEmpty } from "lodash";
-import { DEFAULT_PAGE } from "../../../constants/pagination.constants";
-import MyInput from "../Form/MyInput";
-import MySelect from "../Form/MySelect";
+import React, { useEffect, useState } from 'react';
+import MyDropdown, { DropdownItemWrapper } from '../MyDropdown';
+import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
+import { IFilter } from '../../../interfaces/filter.interface';
+import { FilterTypeEnum } from '../../../enums/filter-type.enum';
+import MyButton from '../MyButton';
+import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'react-router-dom';
+import { isEmpty } from 'lodash';
+import { DEFAULT_PAGE } from '../../../constants/pagination.constants';
+import MyInput from '../Form/MyInput';
+import MySelect from '../Form/MySelect';
 
 interface FiltersButtonProps {
   filters: IFilter[];
@@ -33,13 +32,12 @@ enum FilterActionButtonTypeEnum {
  * - Utilizes custom icons for visual representation of the file formats.
  */
 const FiltersButton = ({ filters = [] }: FiltersButtonProps) => {
-  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { handleSubmit, getValues, register, setValue, reset, watch } = useForm();
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    filters.forEach(filter => {
+    filters.forEach((filter) => {
       if ([FilterTypeEnum.text, FilterTypeEnum.select].includes(filter.type)) {
         setValue(filter.key, searchParams.get(filter.key));
       } else if (filter.type === FilterTypeEnum.multiselect) {
@@ -49,7 +47,7 @@ const FiltersButton = ({ filters = [] }: FiltersButtonProps) => {
   }, [JSON.stringify(filters)]);
 
   const apply = (data: any, type: FilterActionButtonTypeEnum) => {
-    for(const [key, value] of Object.entries(data)) {
+    for (const [key, value] of Object.entries(data)) {
       if (!(value === null || isEmpty(value)) && type === FilterActionButtonTypeEnum.apply) {
         searchParams.set(key, value);
       } else {
@@ -61,49 +59,54 @@ const FiltersButton = ({ filters = [] }: FiltersButtonProps) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-  }, [watch()]);
+  useEffect(() => {}, [watch()]);
 
   return (
-    <form action="" onSubmit={handleSubmit((data: any) => apply(data, FilterActionButtonTypeEnum.apply))}>
+    <form
+      action=""
+      onSubmit={handleSubmit((data: any) => apply(data, FilterActionButtonTypeEnum.apply))}>
       <MyDropdown
         open={open}
         setOpen={setOpen}
         buttonProps={{
-          children: t("Filters"),
-          variant: "secondary",
-          className: "w-max",
+          children: 'Filters',
+          variant: 'secondary',
+          className: 'w-max',
           startIcon: <Filter />,
           endIcon: open ? <ChevronUp /> : <ChevronDown />
         }}>
         {filters?.map((filter, i) => (
           <DropdownItemWrapper className="flex items-center gap-2" key={i}>
-            {filter.type === FilterTypeEnum.text && <>
-              <MyInput label={filter.label} {...register(filter.key)}></MyInput>
-            </>}
-            {filter.type === FilterTypeEnum.select && <>
-              <MySelect
-                onChange={(item) => {
-                  // @ts-ignore
-                  setValue(filter.key, item?.value);
-                }}
-                value={getValues(filter.key)}
-                label={filter.label}
-                options={filter.options || []}
-              ></MySelect>
-            </>}
-            {filter.type === FilterTypeEnum.multiselect && <>
-              <MySelect
-                onChange={(items = []) => {
-                  // @ts-ignore
-                  setValue(filter.key, items.map(item => item.value));
-                }}
-                value={getValues(filter.key)}
-                label={filter.label}
-                isMulti={true}
-                options={filter.options || []}
-              ></MySelect>
-            </>}
+            {filter.type === FilterTypeEnum.text && (
+              <>
+                <MyInput label={filter.label} {...register(filter.key)}></MyInput>
+              </>
+            )}
+            {filter.type === FilterTypeEnum.select && (
+              <>
+                <MySelect
+                  onChange={(item) => {
+                    // @ts-ignore
+                    setValue(filter.key, item?.value);
+                  }}
+                  value={getValues(filter.key)}
+                  label={filter.label}
+                  options={filter.options || []}></MySelect>
+              </>
+            )}
+            {filter.type === FilterTypeEnum.multiselect && (
+              <>
+                <MySelect
+                  onChange={(items = []) => {
+                    // @ts-ignore
+                    setValue(filter.key, items.map((item) => item.value));
+                  }}
+                  value={getValues(filter.key)}
+                  label={filter.label}
+                  isMulti={true}
+                  options={filter.options || []}></MySelect>
+              </>
+            )}
           </DropdownItemWrapper>
         ))}
 
@@ -113,18 +116,14 @@ const FiltersButton = ({ filters = [] }: FiltersButtonProps) => {
               apply(getValues(), FilterActionButtonTypeEnum.reset);
               reset();
             }}
-            type={"reset"}
+            type={'reset'}
             variant="secondary"
             size="base"
             className="flex-1">
-            {t("Reset")}
+            {'Reset'}
           </MyButton>
-          <MyButton
-            type={"submit"}
-            variant="primary"
-            size="base"
-            className="flex-1">
-            {t("Apply")}
+          <MyButton type={'submit'} variant="primary" size="base" className="flex-1">
+            {'Apply'}
           </MyButton>
         </div>
       </MyDropdown>

@@ -1,5 +1,5 @@
-import { FC, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { FC } from 'react';
+
 import { useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MyButton from '../MyButton/MyButton';
@@ -46,7 +46,7 @@ const sizeData = [
 ];
 
 const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
-  const { t } = useTranslation();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const page: number = Number(searchParams.get('page')) || DEFAULT_PAGE;
   const limit: number = Number(searchParams.get('pageSize')) || DEFAULT_LIMIT;
@@ -59,8 +59,9 @@ const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
         className
       ])}>
       <div className="flex items-center gap-4">
-        <p className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
-          {t('Show results')}
+        <p
+          className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
+          {'Show results'}
         </p>
         <div className="pagination-list w-[80px]">
           <MySelect
@@ -80,20 +81,22 @@ const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
             value={Number(searchParams.get('pageSize')) || DEFAULT_LIMIT}
           />
         </div>
-        <p className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
-          {t('per page')}
+        <p
+          className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
+          {'per page'}
         </p>
       </div>
       <div>
-        <div className="flex items-center justify-center text-tag-neutral-text dark:text-subtext-color-dark sm:text-[10px] lg:text-c-s-p">
+        <div
+          className="flex items-center justify-center text-tag-neutral-text dark:text-subtext-color-dark sm:text-[10px] lg:text-c-s-p">
           {page * limit - limit + 1}
           <div className="mx-1 h-[2px] w-[16px] bg-text-muted" />
-          {page * limit} {t('of')} {total} {t('results')}
+          {page * limit} {'of'} {total} {'results'}
         </div>
       </div>
       <div className="flex flex-row items-center gap-2">
         <p className="text-tag-neutral-text dark:text-subtext-color-dark sm:text-[10px] lg:text-c-s-p">
-          {page} {t('of')} {Math.ceil(total / limit)} {t('pages')}
+          {page} {'of'} {Math.ceil(total / limit)} {'pages'}
         </p>
         <div className="flex flex-row items-center gap-2 ">
           <MyButton
@@ -109,7 +112,7 @@ const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
               // setSearchParams({ ...searchParams, page: `${page - 1}` });
             }}
             startIcon={<ChevronLeft width={20} height={20} />}>
-            {t('Prev')}
+            {'Prev'}
           </MyButton>
           <MyButton
             size="base"
@@ -123,7 +126,7 @@ const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
               setSearchParams(searchParams);
             }}
             endIcon={<ChevronRight width={20} height={20} />}>
-            {t('Next')}
+            {'Next'}
           </MyButton>
         </div>
       </div>

@@ -2,7 +2,7 @@ import IconByName from 'assets/icons/IconByName';
 import clsx from 'clsx';
 import { get } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { icons } from 'lucide-react';
@@ -104,107 +104,107 @@ const CustomDropdownMenu: React.FC<CustomDropdownMenuProps> = ({ menuItem }) => 
 };
 
 const NavbarMenu = () => {
-  const { t } = useTranslation();
+  
 
   const menuItems: MenuItem[] = [
     {
-      label: t('Dashboard'),
+      label: 'Dashboard',
       to: '/',
       isSubMenu: false
     },
     {
-      label: t('Attendance'),
+      label: 'Attendance',
       to: '/attendances',
       isSubMenu: true,
       subRoutes: [
         {
-          label: t('Attendance'),
+          label: 'Attendance',
           to: '/attendances/list',
           icon: 'AppWindow'
         },
         {
-          label: t('Attendance Reason'),
+          label: 'Attendance Reason',
           to: '/attendances/reasons',
           icon: 'AppWindow'
         },
         {
-          label: t('Guests'),
+          label: 'Guests',
           to: '/attendances/guests',
           icon: 'AppWindow'
         }
       ]
     },
     {
-      label: t('Monitoring'),
+      label: 'Monitoring',
       to: '/monitoring',
       isSubMenu: true,
       subRoutes: [
         {
-          label: t('Applications monitoring'),
+          label: 'Applications monitoring',
           to: '/monitoring/applications',
           icon: 'AppWindow'
         },
         {
-          label: t('Keystroke monitoring'),
+          label: 'Keystroke monitoring',
           to: '/monitoring/keystroke',
           icon: 'AppWindow'
         },
         {
-          label: t('Screenshots monitoring'),
+          label: 'Screenshots monitoring',
           to: '/monitoring/screenshot',
           icon: 'AppWindow'
         }
       ]
     },
     {
-      label: t('Reports'),
+      label: 'Reports',
       to: '/reports',
       isSubMenu: true,
       subRoutes: [
         {
-          label: t('TimeSheet'),
+          label: 'TimeSheet',
           to: '/reports/timesheet',
           icon: 'Globe'
         },
         {
-          label: t('Attendance'),
+          label: 'Attendance',
           to: '/reports/attendance',
           icon: 'Globe'
         },
         {
-          label: t('Full Check In/Out'),
+          label: 'Full Check In/Out',
           to: '/reports/report-history',
           icon: 'AppWindow'
         },
         {
-          label: t('Early/Late Checks'),
+          label: 'Early/Late Checks',
           to: '/reports/report-late',
           icon: 'Server'
         }
       ]
     },
     {
-      label: t('Organization'),
+      label: 'Organization',
       to: '/employees',
       isSubMenu: true,
       subRoutes: [
         {
-          label: t('Employees'),
+          label: 'Employees',
           to: '/employees/list',
           icon: 'AppWindow'
         },
         {
-          label: t('Departments'),
+          label: 'Departments',
           to: '/employees/departments',
           icon: 'AppWindow'
         },
         {
-          label: t('Work schedule'),
+          label: 'Work schedule',
           to: '/employees/policy',
           icon: 'AppWindow'
         },
         {
-          label: t('Employees position'),
+          label: 'Employees position',
           to: '/employees/job-position',
           icon: 'AppWindow'
         }
@@ -212,7 +212,7 @@ const NavbarMenu = () => {
     },
 
     {
-      label: t('Settings'),
+      label: 'Settings',
       to: '/settings',
       isSubMenu: false
     }

@@ -1,7 +1,7 @@
 import FirstCapitalLetter from 'components/Atoms/FirstCapitalLetter/FirstCapitalLetter';
 import { LogOut } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import storage from 'services/storage';
 import AlertModal from './AlertModal';
 import config from 'configs';
@@ -9,7 +9,7 @@ import MyAvatar from 'components/Atoms/MyAvatar';
 import AvatarImage from 'assets/icons/avatar.jpg';
 
 const ProfileWidget = () => {
-  const { t } = useTranslation();
+  
   const userDataString: string | null = storage.get('userData');
   const userData: any = userDataString ? JSON.parse(userDataString) : {};
   const [open, setOpen] = useState(false);
@@ -57,7 +57,7 @@ const ProfileWidget = () => {
           </div>
           <span onClick={() => setOpenAlert(true)} className="flex items-center gap-2 pt-6">
             <LogOut stroke="#E11D48" />
-            <h3 className="text-sm font-medium text-red-600">{t('Sign Out')}</h3>
+            <h3 className="text-sm font-medium text-red-600">{'Sign Out'}</h3>
           </span>
         </div>
       )}

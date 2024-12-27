@@ -1,5 +1,5 @@
 import { ReactNode, forwardRef } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { twMerge } from 'tailwind-merge';
 
 interface FormInputProps
@@ -34,7 +34,7 @@ type FormInputRef = React.ComponentPropsWithRef<'textarea'>['ref'];
  */
 
 const MyTextarea = forwardRef((props: FormInputProps, ref: FormInputRef) => {
-  const { t } = useTranslation();
+  
   const {
     error = false,
     fullWidth = true,
@@ -71,7 +71,7 @@ const MyTextarea = forwardRef((props: FormInputProps, ref: FormInputRef) => {
           htmlFor={computedProps.name}>
           {label}{' '}
           {!computedProps.required && (
-            <span className="text-c-m-p text-text-muted">({t('Optional')})</span>
+            <span className="text-c-m-p text-text-muted">({'Optional'})</span>
           )}
         </label>
       )}

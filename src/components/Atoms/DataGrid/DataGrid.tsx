@@ -10,7 +10,7 @@ import ExportButton from './ExportButton';
 import CustomizeColumnsButton from './CustomizeColumnsButton';
 import MyDivider from '../MyDivider';
 import { Search } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+
 import useTableContext from 'providers/TableProvider/useTableContext';
 import ActionSelectButton from './ActionSelectButton';
 import FiltersButton from './Filters';
@@ -90,7 +90,7 @@ const DataGrid = forwardRef(
     handleRowClick,
     rowClassName
   }: DataGridProps) => {
-    const { t } = useTranslation();
+    
     const location = useLocation();
     const searchValue: any = paramsStrToObj(location?.search);
     const { columns, columnHash, rows, keyExtractor, filter } = useTableContext();
@@ -199,7 +199,7 @@ const DataGrid = forwardRef(
                   }}
                   startIcon={<Search className="stroke-text-muted" onClick={handleSearch} />}
                   className="w-[300px] dark:bg-bg-input-dark"
-                  placeholder={t('Search...')}
+                  placeholder={'Search...'}
                   defaultValue={get(searchValue, 'search')}
                 />
               )}
@@ -266,7 +266,7 @@ const DataGrid = forwardRef(
                       'text-right',
                       'w-24'
                     )}>
-                    {t('Actions')}
+                    {'Actions'}
                   </div>
                 )}
               </div>
@@ -396,7 +396,7 @@ const DataGrid = forwardRef(
                   <div className="mt-8 flex flex-col items-center">
                     <NoData />
                     <p className="mt-2 text-c-s-p text-tag-neutral-text dark:text-subtext-color-dark">
-                      {t('No Data')}
+                      {'No Data'}
                     </p>
                   </div>
                 )}

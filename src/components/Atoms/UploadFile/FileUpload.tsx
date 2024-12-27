@@ -8,7 +8,7 @@ import { request } from 'services/request';
 import storage from 'services/storage';
 import { twMerge } from 'tailwind-merge';
 import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
+
 
 interface FileUploadProps {
   title: string;
@@ -35,7 +35,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [percentage, setPercentage] = useState<string>('0%');
   const [status, setStatus] = useState<string>('loading');
   const [imageUrl, setImageUrl] = useState<string>('');
-  const { t } = useTranslation();
+  
 
   const requiredLabelStyles = [
     `before:absolute before:right-[-10px] before:top-0 before:text-text-error before:content-['*']`
@@ -92,7 +92,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         {
           <div className="flex h-[124px] w-full flex-col items-center justify-center gap-4 rounded-sm border border-dashed border-gray-300 bg-white p-2">
             <UploadIcon stroke="gray" className="mb_10" />
-            <p className="text-sm font-normal leading-6 text-gray-400">{t('Upload Documents')}</p>
+            <p className="text-sm font-normal leading-6 text-gray-400">{'Upload Documents'}</p>
             <p className="text-sm font-normal leading-6 text-gray-400">{file?.name}</p>
           </div>
         }

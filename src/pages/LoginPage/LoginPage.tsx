@@ -1,10 +1,7 @@
-import SecureStaff from 'assets/icons/SecureStaff';
-import { useTranslation } from 'react-i18next';
 import LoginForm from './_components/LoginForm';
 import WafIcon from 'assets/icons/WafIcon';
 
 const LoginPage = () => {
-  const { t } = useTranslation();
   return (
     <div
       style={{ background: '#131313' }}
@@ -16,10 +13,10 @@ const LoginPage = () => {
         </div>
         <div className="mb-8">
           <p className="headers-web mb-2 text-center text-2xl text-white">
-            {t('WWAF ga xush kelibsiz')}
+            {'WWAF ga xush kelibsiz'}
           </p>
           <p style={{ color: '#A3A3A3' }} className="text-center text-base">
-            {t(`Dunyo bo'ylab real vaqt rejimidagi hujumlarni kuzatish.`)}
+            {`Dunyo bo'ylab real vaqt rejimidagi hujumlarni kuzatish.`}
           </p>
         </div>
         <LoginForm />
