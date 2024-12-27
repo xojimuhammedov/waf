@@ -5,20 +5,20 @@ function LeftComponent() {
   const process = ['Step 1', 'Step 2', 'Step 3'];
   return (
     <div className="w-full">
-      <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }} className="">
+      <div style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }} className="">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Barcha so’rovlar
         </p>
         <h3 className="pl-10 text-3xl font-medium text-white">1 356 280</h3>
         <ApexChart />
       </div>
-      <div className="mt-9" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+      <div className="mt-9" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Saytlar bo’yicha so’rovlar
         </p>
         <LineChart
           xAxis={{ data: process }}
-          height="210px"
+          height="300px"
           type="bar"
           className={'text-base'}
           series={[]}

@@ -14,7 +14,7 @@ const ApexChart: React.FC<ApexChartProps> = () => {
     options: {
       chart: {
         type: 'area',
-        height: 150,
+        height: '250px',
         zoom: {
           enabled: false
         }
@@ -67,7 +67,7 @@ const ApexChart: React.FC<ApexChartProps> = () => {
           options={chartState.options}
           series={chartState.series}
           type="area"
-          height={180}
+          height={'300px'}
         />
       </div>
       <div id="html-dist"></div>

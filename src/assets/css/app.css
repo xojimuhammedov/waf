@@ -83,6 +83,7 @@
 @import './components/_swet-alert.css';
 
 @import './components/_button.css';
+@import './styles.css';
 
 .bottom-item {
   background-color: #292929;
@@ -184,7 +185,7 @@
 }
 
 .form-datepicker input:hover {
-  background-color: #2B2B2B;
+  background-color: #2b2b2b;
 }
 
 .form-datepicker input:focus {
