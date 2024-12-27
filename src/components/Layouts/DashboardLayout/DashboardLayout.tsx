@@ -4,11 +4,13 @@ import Header from './Header';
 const DashboardLayout = ({ setLoading }: any) => {
   return (
     <div>
-      <div className="shadow-[0px_12px_84px_0px_rgba(0, 0, 0, 0.05)] fixed top-0 z-10 flex h-[72px] w-full items-center border-b-2 bg-bg-base px-5 dark:border-bg-dark-bg dark:bg-bg-dark-theme">
+      <div
+        style={{ background: '#202020', borderBottom: '1px solid #2B2B2B' }}
+        className=" fixed top-0 z-10 flex h-[72px] w-full items-center px-5">
         <Header setLoading={setLoading} />
       </div>
 
-      <div className="relative mt-[72px] bg-white">
+      <div className="relative mt-[72px]">
         <Outlet />
       </div>
     </div>

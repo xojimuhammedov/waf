@@ -1,62 +1,58 @@
-import LogoSvg from 'assets/icons/LogoSvg';
-import NavbarMenu from './NavbarMenu';
-import NavbarToolbar from './NavbarToolbar';
+import LogoSvg from 'assets/icons/waf-logo.svg';
 import { Link } from 'react-router-dom';
-import MenuButtonIcon from 'assets/icons/MenuButtonIcon';
 import { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-import { X } from 'lucide-react';
-import NavMobileMenu from './NavMobileMenu';
+import MenuButton from 'assets/icons/MenuButton';
+import MyTailwindPicker from 'components/Atoms/Form/MyTailwindDatePicker';
+import { Calendar } from 'lucide-react';
 
 const Navbar = ({ setLoading }: any) => {
-  const [open, setOpen] = useState<any>(false);
+  const now = new Date();
+  const [value, setValue] = useState<any>({
+    startDate: null,
+    endDate: null
+  });
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  }, [open]);
+  const formattedDate = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}.${now.getFullYear()} ${now
+    .getHours()
+    .toString()
+    .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+  const handleValueChange = (newValue: any) => {
+    setValue(newValue);
+  };
 
   return (
     <>
-      <nav className="flex h-full w-full items-center">
-        <div className="mr-5 flex h-10 w-10 items-center justify-center rounded-m border-[1px] border-border-base bg-bg-base dark:border-dark-line dark:bg-bg-dark-bg">
+      <nav className="flex h-full w-full items-center justify-between">
+        <div className="mr-5 flex items-center justify-center rounded-m dark:border-dark-line dark:bg-bg-dark-bg">
           <Link to={'/'}>
-            <LogoSvg width={24} height={24} />
+            <img src={LogoSvg} alt="" />
           </Link>
         </div>
-        <NavbarMenu />
-        <NavbarToolbar setLoading={setLoading} />
-        <div className="navbar-menu-button">
+        <div className="flex items-center gap-8">
           <div
-            onClick={() => setOpen(true)}
-            className="ml-8 flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-[8px] bg-[#FFF] p-[6px] shadow-[0px_0px_0px_1px_rgba(3,7,18,0.08),0px_1px_2px_-1px_rgba(3,7,18,0.08),0px_2px_4px_0px_rgba(3,7,18,0.04)]">
-            <MenuButtonIcon />
+            style={{ border: '0.5px solid rgba(255, 255, 255, 0.20)' }}
+            className="flex flex h-[40px] w-[88px] cursor-pointer items-center items-center justify-center gap-2 rounded-lg">
+            <p className="text-sm text-white">Menu</p>
+            <MenuButton />
           </div>
+          <div className="w-[320px] navbar-picker">
+            <MyTailwindPicker
+              useRange={false}
+              placeholder={'01.12.2024 - 20.12.2024'}
+              value={value}
+              className='navbar-picker'
+              onChange={handleValueChange}
+              startIcon={<Calendar stroke="#9096A1" />}
+            />
+          </div>
+          <p style={{ color: '#78EDA2' }} className="cursor-pointer text-xl">
+            {formattedDate}
+          </p>
         </div>
       </nav>
-      <Modal
-        isOpen={open}
-        className={
-          'header-modal border-white-500 absolute right-0 h-screen w-[248px] flex-shrink-0 flex-col items-start gap-[32px] border bg-white p-[24px]'
-        }
-        contentLabel="Example Modal">
-        <div className="flex items-center justify-between">
-          <div className="mr-5 flex h-10 w-10 items-center justify-center rounded-m border-[1px] border-border-base bg-bg-base dark:border-dark-line dark:bg-bg-dark-bg">
-            <Link to={'/'}>
-              <LogoSvg width={24} height={24} />
-            </Link>
-          </div>
-          <div className="cursor-pointer" onClick={() => setOpen(false)}>
-            <X stroke="#9CA3AF" />
-          </div>
-        </div>
-        <div className="mt-9">
-          <NavMobileMenu setOpen={setOpen} />
-        </div>
-      </Modal>
     </>
   );
 };

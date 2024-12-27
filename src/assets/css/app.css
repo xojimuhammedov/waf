@@ -106,6 +106,10 @@
   border-left: 1px solid #292929;
 }
 
+.form-datepicker {
+  background-color: rgba(32, 32, 32, 1) !important;
+}
+
 .rmdp-input {
   padding: 20px 10px !important;
   width: 100% !important;
@@ -155,20 +159,16 @@
 }
 
 .form-datepicker input {
-  box-shadow:
-    0px 2px 4px 0px rgba(3, 7, 18, 0.04),
-    0px 1px 2px -1px rgba(3, 7, 18, 0.08),
-    0px 0px 0px 1px rgba(3, 7, 18, 0.08);
   border-width: 0px;
-  background-color: #f9fafb;
-  color: #030712;
+  color: #fff;
   appearance: none;
   border-radius: 6px;
   padding: 10px 12px;
   padding-left: 38px;
   width: 100%;
   transition-duration: 0ms;
-  border: 1px solid #e0e1e2;
+  border: 1px solid rgba(32, 32, 32, 1);
+  background-color: #2b2b2b;
 }
 
 .form-datepicker .rounded-l-full {
@@ -184,13 +184,13 @@
 }
 
 .form-datepicker input:hover {
-  background-color: #f3f4f6;
+  background-color: #2B2B2B;
 }
 
 .form-datepicker input:focus {
   box-shadow: 0px 0px 0px 4px rgba(247, 123, 69, 0.2);
   --tw-ring-color: rgb(0 0 0) !important;
-  background-color: #f9fafb;
+  background-color: #2b2b2b;
   border: 1px solid black;
 }
 .dark .form-datepicker input {
@@ -201,9 +201,6 @@
   background-color: #27282d;
   border-color: #27282d;
 }
-/* .form-datepicker .shadow-sm {
-  height: 315px;
-} */
 
 .form-datepicker .bg-blue-500 {
   background-color: black !important;
@@ -226,6 +223,11 @@
   position: absolute;
   right: 200px;
 }
+
+.navbar-picker .block {
+  right: 190px;
+}
+
 .form-datepicker .grid-cols-7 button {
   width: 2.2rem;
   height: 2.2rem;
