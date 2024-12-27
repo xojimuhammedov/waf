@@ -93,9 +93,18 @@
   background-color: #1d4834;
 }
 
-.bottom-left{
+.bottom-left {
   border-right: 1px solid #292929;
   padding-right: 32px;
+}
+
+.dashboard-left {
+  border-right: 1px solid #292929;
+}
+
+.dashboard-right {
+  padding-left: 24px;
+  border-left: 1px solid #292929;
 }
 
 .rmdp-input {

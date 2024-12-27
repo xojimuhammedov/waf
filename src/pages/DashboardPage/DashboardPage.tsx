@@ -4,15 +4,15 @@ import RightComponent from './_components/RightComponent';
 
 const DashboardPage = () => {
   return (
-    <div className="bg-[#131313] px-4 py-8">
+    <div className="bg-[#131313] py-8">
       <div className="flex justify-between">
-        <div className="w-1/3">
+        <div className="w-1/3 dashboard-left">
           <LeftComponent />
         </div>
-        <div className="w-full">
+        <div className="w-full px-6">
           <BottomComponent />
         </div>
-        <div className="w-1/3">
+        <div className="w-1/3 dashboard-right">
           <RightComponent />
         </div>
       </div>

@@ -4,7 +4,7 @@ import ApexChart from 'components/Molecules/LineChart/LineChart';
 function RightComponent() {
   const process = ['Step 1', 'Step 2', 'Step 3'];
   return (
-    <div>
+    <div className="w-full">
       <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }} className="">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Barcha hujumlar

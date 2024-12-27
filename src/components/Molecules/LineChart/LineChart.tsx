@@ -61,7 +61,7 @@ const ApexChart: React.FC<ApexChartProps> = () => {
   });
 
   return (
-    <div>
+    <div className="w-full">
       <div id="chart">
         <ReactApexChart
           options={chartState.options}
