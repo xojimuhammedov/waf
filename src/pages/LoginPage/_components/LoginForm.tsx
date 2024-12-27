@@ -33,20 +33,13 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: any) => {
-    const { username: identifier, password } = data;
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+    const { username: username, password } = data;
+    // const passwordRegex =
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
 
-    if (passwordRegex.test(password)) {
-      setError('');
-      auth.login({ identifier, password }, () => {
-        toast.error(t('Username or password error!'));
-      });
-    } else {
-      setError(
-        t("Parol kamida 8 ta belgi, katta va kichik harf, raqam va maxsus belgi bo'lishi kerak!")
-      );
-    }
+    auth.login({ username, password }, () => {
+      toast.error(t('Username or password error!'));
+    });
   };
   return (
     <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>

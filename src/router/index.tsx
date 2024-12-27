@@ -4,7 +4,7 @@ import LoginPage from 'pages/LoginPage';
 export const PublicRoutes = [
   {
     path: '/login',
-    element: <DashboardPage />
+    element: <LoginPage />
   }
 ];
 

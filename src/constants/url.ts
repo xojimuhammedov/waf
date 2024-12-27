@@ -1,5 +1,5 @@
 export const URLS = {
-  login: '/api/users-permissions/login',
+  login: '/api/auth/login',
   getMe: '/api/v2/employees/me',
   uploadFile: '/api/upload',
   getGuests: '/api/guests',
