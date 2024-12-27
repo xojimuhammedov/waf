@@ -34,7 +34,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     const path = d3.geoPath().projection(projection);
 
     d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json').then((worldData: any) => {
-      const countries = topojson.feature(worldData, worldData.objects.countries).features;
+      const countries: any = topojson.feature(worldData, worldData.objects.countries).features;
 
       svg
         .selectAll('path')
