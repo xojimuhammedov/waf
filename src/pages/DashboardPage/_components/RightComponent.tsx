@@ -9,7 +9,7 @@ function RightComponent() {
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Barcha hujumlar
         </p>
-        <h3 className="pl-10 text-3xl font-medium text-white">634</h3>
+        <h3 className="pl-10 mt-2 text-5xl font-medium text-white">634</h3>
         <ApexChart />
       </div>
       <div className="mt-9" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>

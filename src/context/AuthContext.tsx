@@ -55,8 +55,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     request
       .post(authConfig.loginEndpoint, params)
       .then(async (response: AxiosResponse<any>) => {
-        console.log(response);
-        window.localStorage.setItem(authConfig.storageTokenKeyName, response.data?.jwt);
+        console.log(response.data);
+        window.localStorage.setItem(authConfig.storageTokenKeyName, response.data?.token);
         setUser({ ...response.data.user });
         window.localStorage.setItem('userData', JSON.stringify(response.data?.user));
         window.location.replace('/');
