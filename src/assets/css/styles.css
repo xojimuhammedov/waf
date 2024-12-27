@@ -1,0 +1,93 @@
+/*@import "bootstrap/dist/css/bootstrap.min.css";*/
+
+@font-face {
+    font-family: localJuraFont;
+    /*src: url("../public/fonts/Jura/static/Jura-Bold.ttf");*/
+}
+
+* {
+    font-family: Inter, Helvetica, sans-serif;
+}
+
+.font-roboto-mono {
+    font-weight: 600;
+    font-family: 'Roboto Mono', "Helvetica Neue", sans-serif;
+}
+
+/*svg {*/
+/*    width: 100%;*/
+/*    display: block;*/
+/*    margin: auto;*/
+/*    background-color: #1A162A; !* Match the body background *!*/
+/*}*/
+
+.country {
+    fill: #11522F; /* Country fill color */
+    stroke: #058841; /* Border color */
+    stroke-width: 0.5px;
+    cursor: pointer; /* Change cursor on hover */
+}
+
+.country-hover {
+    fill: #11522F99; /* Hover color for countries */
+}
+
+.country-target {
+    fill: #0c2910; /* Uzbekistan color */
+    stroke: #058841; /* Border color */
+}
+
+.arc {
+    stroke: #fff;
+    stroke-width: 2px; /* Decreased attack lines width */
+    fill: none;
+    opacity: 0.6;
+}
+
+.attack-label {
+    fill: #ffffff; /* Text color set to white */
+    font-size: 10px; /* Smaller font size */
+    text-anchor: middle; /* Center the text */
+}
+
+.attack-circle {
+    fill: #ffffff80; /* No fill */
+    stroke: #fff; /* White border */
+    stroke-width: 1px; /* Border width */
+    opacity: 0.1; /* Slightly transparent */
+}
+
+.vibrate {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #058841;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 #058841;
+    animation: anim-vibrate 1s infinite;
+}
+
+@keyframes anim-vibrate {
+    0% {
+        transform: scale(1);
+    }
+
+    70% {
+        /*transform: scale(1);*/
+        box-shadow: 0 0 0 1rem rgba(0, 0, 0, 0);
+    }
+
+    100% {
+        /*transform: scale(0.9);*/
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+.chart-title {
+    font-family: localJuraFont;
+    font-size: 18px;
+}
+
+.updated {
+    animation: anim-vibrate 2s infinite;
+}

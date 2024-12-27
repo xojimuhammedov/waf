@@ -83,6 +83,7 @@
 @import './components/_swet-alert.css';
 
 @import './components/_button.css';
+@import './styles.css';
 
 .bottom-item {
   background-color: #292929;
