@@ -9,8 +9,8 @@ function LeftComponent() {
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Barcha so’rovlar
         </p>
-        <h3 className="pl-10 text-5xl font-medium text-white mt-2">1 356 280</h3>
-        <ApexChart />
+        <h3 className="mb-20 mt-2 pl-10 text-5xl font-medium text-white">1 356 280</h3>
+        {/* <ApexChart /> */}
       </div>
       <div className="mt-9" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">

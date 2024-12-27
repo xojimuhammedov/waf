@@ -8,14 +8,16 @@ const DashboardPage = () => {
   return (
     <div className="h-screen w-screen bg-[#131313] px-4 py-8" style={{ boxSizing: 'border-box' }}>
       <div className="flex h-full justify-between">
-        <div className="w-1/4 dashboard-left px-6 pt-11">
+        <div className="dashboard-left w-1/4 px-6 pt-11">
           <LeftComponent />
         </div>
-        <div className="flex w-full flex-col px-10">
-          <div className={'flex-shrink-1 h-full'}>
+        <div className="flex w-full flex-col">
+          <div className={'flex-shrink-1 h-full '}>
             <TopComponent />
           </div>
-          <div className={'h-[300px] flex-shrink-0'}>
+          <div
+            style={{ borderTop: '1px solid #292929', background: 'transparent' }}
+            className={'h-[300px] flex-shrink-0 '}>
             <BottomComponent />
           </div>
         </div>

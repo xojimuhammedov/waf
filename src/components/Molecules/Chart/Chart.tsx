@@ -56,7 +56,7 @@ const Chart: FC<ChartProps> = ({
   const options = {
     tooltip: {},
     xAxis: {
-      data: ['Category1', 'Category2', 'Category3'],
+      data: ['datagaze.uz', 'waf.datagaze.uz', 'lp.eset.lab'],
       axisLabel: {
         show: false
       }
@@ -87,22 +87,20 @@ const Chart: FC<ChartProps> = ({
         className={twMerge('w-full', className)}
       />
 
-      {/* {legends && (
-        <div className="mt-l flex items-center pl-[10px]">
-          {legends.map((legend, i) => (
-            <div className="flex items-center" key={i}>
-              <div
-                className={twMerge(
-                  'ml-2 mr-2 h-3 w-3 rounded-full',
-                  legend.className,
-                  i === 0 && 'ml-0'
-                )}
-              />
-              <p className="text-c-s text-text-base dark:text-dark-text">{legend.legend}</p>
-            </div>
-          ))}
+      <div className="flex items-center justify-center gap-4 pb-8 pl-[10px]">
+        <div className="flex items-center gap-2">
+          <span style={{ background: '#176936' }} className="h-4 w-4 rounded-full"></span>
+          <p className="text-c-s text-white dark:text-dark-text">{'datagaze.uz'}</p>
         </div>
-      )} */}
+        <div className="flex items-center gap-2">
+          <span style={{ background: '#883C0C' }} className="h-4 w-4 rounded-full"></span>
+          <p className="text-c-s text-white dark:text-dark-text">{'waf.datagaze.uz'}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span style={{ background: '#436813' }} className="h-4 w-4 rounded-full"></span>
+          <p className="text-c-s text-white dark:text-dark-text">{'lp.eset.lab'}</p>
+        </div>
+      </div>
     </div>
   );
 };
