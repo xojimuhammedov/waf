@@ -32,25 +32,25 @@ const Navbar = ({ setLoading }: any) => {
           </Link>
         </div>
         <div className="flex items-center gap-8">
+          <p style={{ color: '#78EDA2' }} className="cursor-pointer text-2xl font-light">
+            {formattedDate}
+          </p>
+          <div className="navbar-picker w-[320px]">
+            <MyTailwindPicker
+              useRange={false}
+              placeholder={'01.12.2024 - 20.12.2024'}
+              value={value}
+              className="navbar-picker"
+              onChange={handleValueChange}
+              startIcon={<Calendar stroke="#9096A1" />}
+            />
+          </div>
           <div
             style={{ border: '0.5px solid rgba(255, 255, 255, 0.20)' }}
             className="flex flex h-[40px] w-[88px] cursor-pointer items-center items-center justify-center gap-2 rounded-lg">
             <p className="text-sm text-white">Menu</p>
             <MenuButton />
           </div>
-          <div className="w-[320px] navbar-picker">
-            <MyTailwindPicker
-              useRange={false}
-              placeholder={'01.12.2024 - 20.12.2024'}
-              value={value}
-              className='navbar-picker'
-              onChange={handleValueChange}
-              startIcon={<Calendar stroke="#9096A1" />}
-            />
-          </div>
-          <p style={{ color: '#78EDA2' }} className="cursor-pointer text-xl">
-            {formattedDate}
-          </p>
         </div>
       </nav>
     </>
