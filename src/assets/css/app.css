@@ -84,6 +84,20 @@
 
 @import './components/_button.css';
 
+.bottom-item {
+  background-color: #292929;
+  transition: 0.3s all ease;
+}
+
+.bottom-item:hover {
+  background-color: #1d4834;
+}
+
+.bottom-left{
+  border-right: 1px solid #292929;
+  padding-right: 32px;
+}
+
 .rmdp-input {
   padding: 20px 10px !important;
   width: 100% !important;
