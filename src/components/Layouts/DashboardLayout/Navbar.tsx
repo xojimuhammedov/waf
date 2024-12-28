@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import MenuButton from 'assets/icons/MenuButton';
 import MyTailwindPicker from 'components/Atoms/Form/MyTailwindDatePicker';
 import { Calendar } from 'lucide-react';
+import storage from 'services/storage';
 
 const Navbar = ({ setLoading }: any) => {
   const now = new Date();
@@ -21,6 +22,11 @@ const Navbar = ({ setLoading }: any) => {
 
   const handleValueChange = (newValue: any) => {
     setValue(newValue);
+  };
+
+  const handleLogOut = () => {
+    storage.remove('accessToken');
+    window.location.reload();
   };
 
   return (
@@ -46,6 +52,7 @@ const Navbar = ({ setLoading }: any) => {
             />
           </div>
           <div
+            onClick={handleLogOut}
             style={{ border: '0.5px solid rgba(255, 255, 255, 0.20)' }}
             className="flex flex h-[40px] w-[88px] cursor-pointer items-center items-center justify-center gap-2 rounded-lg">
             <p className="text-sm text-white">Menu</p>

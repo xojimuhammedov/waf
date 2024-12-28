@@ -46,7 +46,6 @@ const sizeData = [
 ];
 
 const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
-
   const [searchParams, setSearchParams] = useSearchParams();
   const page: number = Number(searchParams.get('page')) || DEFAULT_PAGE;
   const limit: number = Number(searchParams.get('pageSize')) || DEFAULT_LIMIT;
@@ -59,8 +58,7 @@ const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
         className
       ])}>
       <div className="flex items-center gap-4">
-        <p
-          className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
+        <p className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
           {'Show results'}
         </p>
         <div className="pagination-list w-[80px]">
@@ -81,14 +79,12 @@ const MyPagination: FC<PaginationProps> = ({ total = 0, className = [] }) => {
             value={Number(searchParams.get('pageSize')) || DEFAULT_LIMIT}
           />
         </div>
-        <p
-          className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
+        <p className="text-subtle:text-gray-700 font-inter font-medium text-gray-900 dark:text-subtext-color-dark sm:text-[10px] lg:text-xs">
           {'per page'}
         </p>
       </div>
       <div>
-        <div
-          className="flex items-center justify-center text-tag-neutral-text dark:text-subtext-color-dark sm:text-[10px] lg:text-c-s-p">
+        <div className="flex items-center justify-center text-tag-neutral-text dark:text-subtext-color-dark sm:text-[10px] lg:text-c-s-p">
           {page * limit - limit + 1}
           <div className="mx-1 h-[2px] w-[16px] bg-text-muted" />
           {page * limit} {'of'} {total} {'results'}

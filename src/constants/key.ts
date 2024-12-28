@@ -44,4 +44,6 @@ export const KEYS = {
   getScreenshots: 'getScreenshots',
   getKeylogerChart: 'getKeylogerChart',
   getApplicationChart: 'getApplicationChart',
+  getStatisticsAttacks: 'getStatisticsAttacks',
+  getStatisticsAccessLogs: 'getStatisticsAccessLogs'
 };

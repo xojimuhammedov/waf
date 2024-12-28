@@ -22,25 +22,18 @@ interface ChartProps {
   type: 'line' | 'bar' | 'pictorialBar';
 }
 
-const Chart: FC<ChartProps> = ({
-  height = '100%',
-  width,
-  className,
-  legends = [],
-  series,
-  xAxis,
-  type
-}) => {
-  const barData: any = [55, 20, 36];
+const Chart = ({ height = '100%', width, className, hostName, hostCount, title }: any) => {
+  const barData: any = hostCount;
+  const host: any = hostName;
 
   const barColors: any = [
     ['rgba(28, 209, 237, 0.27)', 'rgba(32, 32, 32, 0.00)'],
-    ['rgba(136, 60, 12, 0.50)', 'rgba(32, 32, 32, 0.00)'],
-    ['rgba(67, 104, 19, 0.50)', 'rgba(32, 32, 32, 0.00)']
+    ['rgba(136, 60, 12, 0.50)', 'rgba(32, 32, 32, 0.00)']
+    // ['rgba(67, 104, 19, 0.50)', 'rgba(32, 32, 32, 0.00)']
   ];
 
   const seriesData = (data: any, colors: any) => {
-    return data.map((val: any, idx: any) => ({
+    return data?.map((val: any, idx: any) => ({
       value: val,
       itemStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -56,7 +49,7 @@ const Chart: FC<ChartProps> = ({
   const options = {
     tooltip: {},
     xAxis: {
-      data: ['datagaze.uz', 'waf.datagaze.uz', 'lp.eset.lab'],
+      data: host,
       axisLabel: {
         show: false
       }
@@ -72,7 +65,7 @@ const Chart: FC<ChartProps> = ({
     },
     series: [
       {
-        name: 'Series',
+        name: title,
         type: 'bar',
         data: chartData
       }
@@ -88,7 +81,15 @@ const Chart: FC<ChartProps> = ({
       />
 
       <div className="flex items-center justify-center gap-4 pb-8 pl-[10px]">
-        <div className="flex items-center gap-2">
+        {hostName?.map((legend: any, idx: any) => (
+          <div key={idx} className="flex cursor-pointer items-center gap-2">
+            <span
+              style={{ background: `${barColors?.[idx]}` }}
+              className="h-4 w-4 rounded-full"></span>
+            <p className="text-c-s text-white dark:text-dark-text">{legend}</p>
+          </div>
+        ))}
+        {/* <div className="flex items-center gap-2">
           <span style={{ background: '#176936' }} className="h-4 w-4 rounded-full"></span>
           <p className="text-c-s text-white dark:text-dark-text">{'datagaze.uz'}</p>
         </div>
@@ -99,7 +100,7 @@ const Chart: FC<ChartProps> = ({
         <div className="flex items-center gap-2">
           <span style={{ background: '#436813' }} className="h-4 w-4 rounded-full"></span>
           <p className="text-c-s text-white dark:text-dark-text">{'lp.eset.lab'}</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

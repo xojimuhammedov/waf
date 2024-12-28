@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-interface ApexChartProps {}
-
-const ApexChart: React.FC<ApexChartProps> = () => {
+const ApexChart = ({ countData, time, title }: any) => {
   const [chartState, setChartState] = useState<any>({
     series: [
       {
-        name: 'STOCK ABC',
-        data: [15, 24, 36, 48, 72]
+        name: 'Hujumlar',
+        data: countData
       }
     ],
     options: {
@@ -34,7 +32,7 @@ const ApexChart: React.FC<ApexChartProps> = () => {
         borderColor: 'transparent', // Grid chiziqlari rangini yo'q qiladi
         show: false // Gridni umuman ko'rsatmaslik
       },
-      labels: ['Department', 'Department', 'Department', 'Department', 'Department'],
+      labels: time,
       xaxis: {
         labels: {
           show: false // X o'qi yozuvlarini yashiradi (Department)
@@ -59,6 +57,14 @@ const ApexChart: React.FC<ApexChartProps> = () => {
       }
     }
   });
+
+  useEffect(() => {
+    setChartState((prev: any) => ({
+      ...prev,
+      series: [{ name: title, data: countData }],
+      options: { ...prev.options, labels: time }
+    }));
+  }, [countData, time]);
 
   return (
     <div className="w-full">

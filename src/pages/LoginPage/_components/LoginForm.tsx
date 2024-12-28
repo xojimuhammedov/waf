@@ -46,8 +46,8 @@ const LoginForm = () => {
         <MyInput
           error={Boolean(errors?.username?.message)}
           helperText={errors?.username?.message}
-          placeholder={'username'}
-          label="Username*"
+          placeholder={'Foydalanuvchi nomi'}
+          label="Foydalanuvchi nomi*"
           {...register('username')}
           startIcon={
             <div className={'cursor-pointer text-gray-400'}>
@@ -61,9 +61,9 @@ const LoginForm = () => {
           error={Boolean(errors?.password?.message)}
           helperText={errors?.password?.message}
           autoComplete="new-password"
-          placeholder={'password'}
+          placeholder={'Parol'}
           {...register('password')}
-          label="Password*"
+          label="Parol*"
           type={showPassword ? 'text' : 'password'}
           startIcon={
             <div

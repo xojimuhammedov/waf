@@ -28,7 +28,6 @@ import storage from 'services/storage';
  */
 
 const ColumnsEmployee = ({ setData, setEmployee, employee }: any) => {
-  
   const userDataString: string | null = storage.get('userData');
   const companyId: any = userDataString ? JSON.parse(userDataString) : {};
   const location = useLocation();
@@ -105,7 +104,7 @@ const ColumnsEmployee = ({ setData, setEmployee, employee }: any) => {
             fromDate: dayjs(new Date()).format('YYYY-MM-DD'),
             toDate: dayjs(new Date()).format('YYYY-MM-DD'),
             employees: employee,
-            companyId: get(companyId, 'company.id'),
+            companyId: get(companyId, 'company.id')
           }
         }
       },

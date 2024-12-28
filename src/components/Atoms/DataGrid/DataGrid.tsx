@@ -90,7 +90,6 @@ const DataGrid = forwardRef(
     handleRowClick,
     rowClassName
   }: DataGridProps) => {
-    
     const location = useLocation();
     const searchValue: any = paramsStrToObj(location?.search);
     const { columns, columnHash, rows, keyExtractor, filter } = useTableContext();

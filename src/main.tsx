@@ -11,6 +11,7 @@ import { SearchParamsProvider } from 'context/RouteContext';
 import { DarkLightProvider } from 'context/DarkLightContext';
 import Loading from 'assets/icons/Loading';
 import { NavigateParamsProvider } from 'context/NavigateRouteContext';
+import { DateRangeProvider } from 'context/DatePickerContext';
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -25,13 +26,15 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <DarkLightProvider>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
-            <ImageCropProvider>
-              <SearchParamsProvider>
-                <NavigateParamsProvider>
-                  <AppRoutes />
-                </NavigateParamsProvider>
-              </SearchParamsProvider>
-            </ImageCropProvider>
+            <DateRangeProvider>
+              <ImageCropProvider>
+                <SearchParamsProvider>
+                  <NavigateParamsProvider>
+                    <AppRoutes />
+                  </NavigateParamsProvider>
+                </SearchParamsProvider>
+              </ImageCropProvider>
+            </DateRangeProvider>
           </QueryClientProvider>
         </AuthProvider>
       </DarkLightProvider>

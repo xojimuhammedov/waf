@@ -12,7 +12,7 @@ const DashboardPage = () => {
           <LeftComponent />
         </div>
         <div className="flex w-full flex-col">
-          <div className={'flex-shrink-1 h-full '}>
+          <div className={'flex-shrink-1 h-full'}>
             <TopComponent />
           </div>
           <div
