@@ -2,11 +2,13 @@ import LineChart from 'components/Molecules/Chart';
 import ApexChart from 'components/Molecules/LineChart/LineChart';
 import { KEYS } from 'constants/key';
 import { URLS } from 'constants/url';
+import { useDateRange } from 'context/DatePickerContext';
 import dayjs from 'dayjs';
 import { useGetAllQuery } from 'hooks/api';
 import { get } from 'lodash';
 
 function RightComponent() {
+  const value: any = useDateRange();
   const process = ['Step 1', 'Step 2', 'Step 3'];
   const countData: any = [];
   const onTime: any = [];
@@ -15,10 +17,17 @@ function RightComponent() {
     key: KEYS.getStatisticsAttacks,
     url: URLS.getStatisticsAttacks,
     params: {
-      from: dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
-      to: dayjs(new Date()).format('YYYY-MM-DD')
+      from:
+        dayjs(value?.value?.startDate).format('YYYY-MM-DD') == 'Invalid Date'
+          ? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD')
+          : dayjs(value?.value?.startDate).format('YYYY-MM-DD'),
+      to:
+        dayjs(value?.value?.endDate).format('YYYY-MM-DD') == 'Invalid Date'
+          ? dayjs(new Date()).format('YYYY-MM-DD')
+          : dayjs(value?.value?.endDate).format('YYYY-MM-DD')
     }
   });
+
 
   get(data, 'data.xronology')?.forEach((item: any) => {
     countData.push(item.count);
