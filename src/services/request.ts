@@ -33,6 +33,7 @@ request.interceptors.response.use(
     console.log('error', error?.response);
     if (statusCode === 401) {
       window.localStorage.clear();
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

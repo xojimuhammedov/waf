@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 //@ts-ignore
 import * as topojson from 'topojson-client';
@@ -8,15 +8,17 @@ type D3MapProps = {
 };
 
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
+  const ref = useRef<SVGSVGElement>(null);
   useEffect(() => {
-    init();
-  }, []);
+    if (ref.current) {
+      init(ref.current);
+    }
 
-  const init = () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const ratio = height / width;
-    console.log(ratio);
+  }, [ref.current]);
+
+  const init = (container: SVGSVGElement) => {
+    const width = container.width.baseVal.value;
+    const height = container.height.baseVal.value;
 
     // Create SVG container
     const svg = d3
@@ -28,8 +30,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     // Set up map projection
     const projection = d3
       .geoMercator()
-      .scale(260)
-      .translate([0.33 * width, 0.56 * height]);
+      .scale(200)
+      .translate([2.1 * width, 4 * height]);
 
     const path = d3.geoPath().projection(projection);
 
@@ -294,7 +296,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     });
   };
 
-  return <svg id={'map'}></svg>;
+  return <svg ref={ref} id={'map'}></svg>;
 };
 
 export default D3Map;

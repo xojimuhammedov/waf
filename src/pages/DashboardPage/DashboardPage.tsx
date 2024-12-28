@@ -6,18 +6,18 @@ import TopComponent from './_components/TopComponent';
 
 const DashboardPage = () => {
   return (
-    <div className="h-screen w-screen bg-[#131313] px-4 py-8" style={{ boxSizing: 'border-box' }}>
+    <div className="h-full w-full bg-[#131313]" style={{ boxSizing: 'border-box' }}>
       <div className="flex h-full justify-between">
         <div className="dashboard-left w-1/4 px-6 pt-11">
           <LeftComponent />
         </div>
-        <div className="flex w-full flex-col">
-          <div className={'flex-shrink-1 h-full'}>
+        <div className="w-full relative">
+          <div className={'h-full'}>
             <TopComponent />
           </div>
           <div
-            style={{ borderTop: '1px solid #292929', background: 'transparent' }}
-            className={'h-[300px] flex-shrink-0 '}>
+            style={{ borderTop: '1px solid #292929'}}
+            className={'w-full h-[350px] flex-shrink-0 bg-[#00000077] bottom-0 absolute'}>
             <BottomComponent />
           </div>
         </div>

@@ -22,7 +22,7 @@ interface ChartProps {
   type: 'line' | 'bar' | 'pictorialBar';
 }
 
-const Chart = ({ height = '100%', width, className, hostName, hostCount, title }: any) => {
+const Chart = ({ height = '300px', width, className, hostName, hostCount, title }: any) => {
   const barData: any = hostCount;
   const host: any = hostName;
 

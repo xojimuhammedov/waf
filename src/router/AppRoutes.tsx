@@ -3,7 +3,6 @@ import DashboardLayout from 'components/Layouts/DashboardLayout';
 import { Route, Routes } from 'react-router-dom';
 import { PrivateRoutes, PublicRoutes } from 'router';
 import storage from 'services/storage';
-import PrivateRoute from './components/PrivateRoutes';
 import { useDarkMode } from 'context/DarkLightContext';
 import { twMerge } from 'tailwind-merge';
 import { useState } from 'react';
@@ -28,16 +27,9 @@ function AppRoutes() {
           <Route key={key} path={evt.path} element={evt.element} />
         ))}
         {PrivateRoutes.map((evt: any, key: number) => (
-          <Route
-            key={key}
-            path={evt.path}
-            element={
-              <>
-                <DashboardLayout setLoading={setLoading} />
-                <PrivateRoute>{evt.element}</PrivateRoute>
-              </>
-            }
-          />
+          <Route key={key} path={evt.path} element={<DashboardLayout setLoading={setLoading} />}>
+            <Route index element={evt.element} />
+          </Route>
         ))}
         <Route path="*" element={<Components404 />} />
       </Routes>

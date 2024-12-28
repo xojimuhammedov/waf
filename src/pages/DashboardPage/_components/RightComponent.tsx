@@ -46,33 +46,31 @@ function RightComponent() {
   });
 
   return (
-    <div className="w-full">
-      <div style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }} className="">
+    <div className="w-full flex flex-col h-full">
+      <div style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }} className="flex-1">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Barcha hujumlar
         </p>
         <h3 className="mb-20 mt-2 pl-10 text-5xl font-medium text-white">
-          {' '}
           {get(data, 'data.total')}
         </h3>
       </div>
-      <div className="mt-9" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>
-        <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
+      <div className="flex-1" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>
+        <p style={{ color: '#A3A3A3' }} className="pt-9 pl-10 text-lg font-medium">
           Saytlar bo’yicha hujumlar
         </p>
         <LineChart
-          height="300px"
           className={'text-base'}
           hostName={hostName}
           hostCount={hostCount}
           title="Saytlar bo’yicha hujumlar"
         />
       </div>
-      <div className="mt-9">
+      <div className="pt-9 flex-1">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
-          Hujumlar xronologiyasi
+          Hujumlar dinamikasi
         </p>
-        <ApexChart countData={countData} title="Hujumlar xronologiyasi" time={onTime} />
+        <ApexChart countData={countData} title="hujumlar dinamikasi" time={onTime} />
       </div>
     </div>
   );

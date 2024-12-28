@@ -99,10 +99,7 @@ const FiltersButton = ({ filters = [] }: FiltersButtonProps) => {
                 <MySelect
                   onChange={(items: any = []) => {
                     // @ts-ignore
-                    setValue(
-                      filter.key,
-                      items.map((item: any) => item.value)
-                    );
+                    setValue(filter.key, items.map((item: any) => item.value));
                   }}
                   value={getValues(filter.key)}
                   label={filter.label}

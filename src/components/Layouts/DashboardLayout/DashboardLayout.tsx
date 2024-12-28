@@ -3,14 +3,13 @@ import Header from './Header';
 
 const DashboardLayout = ({ setLoading }: any) => {
   return (
-    <div>
+    <div className={'w-screen h-screen flex flex-col items-center justify-center'}>
       <div
-        style={{ background: '#202020', borderBottom: '1px solid #2B2B2B' }}
-        className=" fixed top-0 z-10 flex h-[72px] w-full items-center px-5">
+        style={{ borderBottom: '1px solid #2B2B2B' }}
+        className="h-[72px]  w-full flex-shrink-0 px-5 bg-[#202020]">
         <Header setLoading={setLoading} />
       </div>
-
-      <div className="relative mt-[72px]">
+      <div className="flex-shrink-1 h-full w-full">
         <Outlet />
       </div>
     </div>
