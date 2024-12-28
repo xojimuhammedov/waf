@@ -46,5 +46,6 @@ export const URLS = {
   getKeylogerChart: '/api/v2/keylogger/get-bar-chart',
   getApplicationChart: '/api/v2/activewindow/get-bar-chart',
   getStatisticsAttacks: '/api/statistics/attacks',
-  getStatisticsAccessLogs: '/api/statistics/accesslog'
+  getStatisticsAccessLogs: '/api/statistics/accesslog',
+  getStatisticsType: '/api/statistics/attacks/type'
 };

@@ -13,6 +13,9 @@ function RightComponent() {
   const countData: any = [];
   const onTime: any = [];
 
+  const hostName: any = [];
+  const hostCount: any = [];
+
   const { data } = useGetAllQuery({
     key: KEYS.getStatisticsAttacks,
     url: URLS.getStatisticsAttacks,
@@ -28,12 +31,18 @@ function RightComponent() {
     }
   });
 
-
-  get(data, 'data.xronology')?.forEach((item: any) => {
+  get(data, 'data.xronology')?.map((item: any) => {
     countData.push(item.count);
   });
-  get(data, 'data.xronology')?.forEach((item: any) => {
+  get(data, 'data.xronology')?.map((item: any) => {
     onTime.push(dayjs(item.date).format('DD.MM.YYYY'));
+  });
+
+  get(data, 'data.by_host')?.map((item: any) => {
+    hostCount.push(Number(item.count));
+  });
+  get(data, 'data.by_host')?.map((item: any) => {
+    hostName.push(item.host);
   });
 
   return (
@@ -52,18 +61,18 @@ function RightComponent() {
           Saytlar bo’yicha hujumlar
         </p>
         <LineChart
-          xAxis={{ data: process }}
           height="300px"
-          type="bar"
           className={'text-base'}
-          series={[]}
+          hostName={hostName}
+          hostCount={hostCount}
+          title="Saytlar bo’yicha hujumlar"
         />
       </div>
       <div className="mt-9">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Hujumlar xronologiyasi
         </p>
-        <ApexChart countData={countData} time={onTime} title="Hujumlar xronologiyasi" />
+        <ApexChart countData={countData} title="Hujumlar xronologiyasi" time={onTime} />
       </div>
     </div>
   );

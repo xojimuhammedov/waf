@@ -97,11 +97,11 @@ const FiltersButton = ({ filters = [] }: FiltersButtonProps) => {
             {filter.type === FilterTypeEnum.multiselect && (
               <>
                 <MySelect
-                  onChange={(items = []) => {
+                  onChange={(items: any = []) => {
                     // @ts-ignore
                     setValue(
                       filter.key,
-                      items.map((item) => item.value)
+                      items.map((item: any) => item.value)
                     );
                   }}
                   value={getValues(filter.key)}

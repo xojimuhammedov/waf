@@ -1,8 +1,28 @@
 import HujumIcon from 'assets/icons/HujumIcon';
-import React from 'react';
-import { countryData, hujumData } from 'services/country';
+import { KEYS } from 'constants/key';
+import { URLS } from 'constants/url';
+import { useDateRange } from 'context/DatePickerContext';
+import dayjs from 'dayjs';
+import { useGetAllQuery } from 'hooks/api';
+import { get } from 'lodash';
+import { countryData } from 'services/country';
 
 function BottomComponent() {
+  const value: any = useDateRange();
+  const { data } = useGetAllQuery({
+    key: KEYS.getStatisticsType,
+    url: URLS.getStatisticsType,
+    params: {
+      from:
+        dayjs(value?.value?.startDate).format('YYYY-MM-DD') == 'Invalid Date'
+          ? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD')
+          : dayjs(value?.value?.startDate).format('YYYY-MM-DD'),
+      to:
+        dayjs(value?.value?.endDate).format('YYYY-MM-DD') == 'Invalid Date'
+          ? dayjs(new Date()).format('YYYY-MM-DD')
+          : dayjs(value?.value?.endDate).format('YYYY-MM-DD')
+    }
+  });
   return (
     <div className="flex gap-8 px-10 pt-4">
       <div className="bottom-left w-full">
@@ -27,15 +47,15 @@ function BottomComponent() {
         <p style={{ color: '#A3A3A3' }} className="mb-4 text-lg font-medium">
           TOP Hujum turlari
         </p>
-        {hujumData.map((item, index) => (
+        {get(data, 'data').map((item: any, index: number) => (
           <div key={index} className="mb-2 flex items-center justify-between">
             <p
-              style={{ width: item?.process }}
+              style={{ width: item?.count }}
               className="bottom-item flex h-[32px] cursor-pointer items-center gap-2 rounded px-2 text-sm text-white">
               <HujumIcon />
-              {item?.title}
+              {item?.type}
             </p>
-            <p className="text-sm text-white">{item.count}</p>
+            <p className="text-sm text-white">{item?.count}</p>
           </div>
         ))}
       </div>

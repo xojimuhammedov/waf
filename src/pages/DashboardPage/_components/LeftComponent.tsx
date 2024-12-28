@@ -30,8 +30,6 @@ function LeftComponent() {
     }
   });
 
-  console.log(dayjs(value.startDate).format('YYYY-MM-Dd'));
-
   get(data, 'data.xronology')?.map((item: any) => {
     countData.push(Number(item.count));
   });
