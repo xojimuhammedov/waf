@@ -47,7 +47,7 @@ function BottomComponent() {
         <p style={{ color: '#A3A3A3' }} className="mb-4 text-lg font-medium">
           TOP Hujum turlari
         </p>
-        {get(data, 'data').map((item: any, index: number) => (
+        {get(data, 'data')?.map((item: any, index: number) => (
           <div key={index} className="mb-2 flex items-center justify-between">
             <p
               style={{ width: item?.count }}
