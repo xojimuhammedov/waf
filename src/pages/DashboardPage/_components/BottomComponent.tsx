@@ -25,7 +25,7 @@ function BottomComponent() {
   });
   return (
     <div className="flex gap-8 px-10 pt-4">
-      <div className="bottom-left w-full">
+      <div className="w-full">
         <p style={{ color: '#A3A3A3' }} className="mb-4 text-lg font-medium">
           TOP Hujumchi davlatlar
         </p>
@@ -50,7 +50,7 @@ function BottomComponent() {
         {get(data, 'data')?.map((item: any, index: number) => (
           <div key={index} className="mb-2 flex items-center justify-between">
             <p
-              style={{ width: item?.count }}
+              style={{ width: (item?.count > 550 )? 550 : item?.count }}
               className="bottom-item flex h-[32px] cursor-pointer items-center gap-2 rounded px-2 text-sm text-white">
               <HujumIcon />
               {item?.type}

@@ -91,3 +91,9 @@
 .updated {
   animation: anim-vibrate 2s infinite;
 }
+
+.opacity-9
+{
+opacity: 0.9;
+
+}

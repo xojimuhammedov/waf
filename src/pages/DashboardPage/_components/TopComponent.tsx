@@ -16,7 +16,7 @@ function TopComponent() {
 
   return (
     <div className={'h-full relative'}>
-      <div className={'rounded px-3 absolute h-[250px] w-[400px] bg-[#00000077]'}>
+      <div className={'rounded px-3 absolute h-[250px] w-[400px] bg-[#00000077]'} style={{margin: 20}}>
         {attackCountries.map((value: any, index: number) => <div
           key={`${index}-${value}`}
           className={'flex pt-3 px-3 d-flex items-center'}>
