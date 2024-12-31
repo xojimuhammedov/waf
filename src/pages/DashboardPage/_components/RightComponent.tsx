@@ -39,12 +39,12 @@ function RightComponent() {
   });
 
   get(data, 'data.by_host')
-    ?.slice(0, 3)
+    ?.slice(0, 2)
     ?.map((item: any) => {
       hostCount.push(Number(item.count));
     });
   get(data, 'data.by_host')
-    ?.slice(0, 3)
+    ?.slice(0, 2)
     ?.map((item: any) => {
       hostName.push(item.host);
     });
@@ -63,12 +63,12 @@ function RightComponent() {
         <p style={{ color: '#A3A3A3' }} className="pl-10 pt-9 text-lg font-medium">
           Saytlar bo’yicha hujumlar
         </p>
-        {/* <LineChart
+        <LineChart
           className={'text-base'}
           hostName={hostName}
           hostCount={hostCount}
           title="Saytlar bo’yicha hujumlar"
-        /> */}
+        />
       </div>
       <div className="flex-1 pt-9">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
