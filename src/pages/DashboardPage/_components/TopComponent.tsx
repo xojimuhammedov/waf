@@ -12,6 +12,8 @@ function TopComponent() {
     });
   }
 
+  // console.log(attackCountries)
+
   return (
     <div className={'h-full relative'}>
       <div className={'rounded px-3 absolute h-[250px] w-[400px] bg-[#00000077]'}>
@@ -21,7 +23,7 @@ function TopComponent() {
           <div className="vibrate me-4"></div>
           <div>
             <div className={'text-lg text-[#919191]'}>{value.name}</div>
-            <div>{dayjs(value.date).format("DD:MM:YYYY HH:MM:ss")}</div>
+            <div>{dayjs(value.date).format("YYYY-MM-DD HH:mm:ss")}</div>
           </div>
         </div>)}
       </div>

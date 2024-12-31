@@ -1,7 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 //@ts-ignore
 import * as topojson from 'topojson-client';
+import storage from 'services/storage';
+import { io } from 'socket.io-client';
+import config from 'configs';
+import dayjs from 'dayjs';
 
 type D3MapProps = {
   setAttackCountries: (data: object) => void;
@@ -9,12 +13,65 @@ type D3MapProps = {
 
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const ref = useRef<SVGSVGElement>(null);
+  const token = storage.get('accessToken');
+  const [countrys, setCountries] = useState<{ name: string; coords: number[]; time_stamp: any }[]>(
+    []
+  );
+  const socketEnv: any = config.API_ROOT;
   useEffect(() => {
     if (ref.current) {
       init(ref.current);
     }
-
   }, [ref.current]);
+
+  useEffect(() => {
+    const socket = io(socketEnv, {
+      extraHeaders: {
+        auth: `${token}`
+      }
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected.');
+    });
+
+    socket.on('message', (data: any) => {
+      console.log(data);
+    });
+    socket.on('log', (data: any) => {
+      try {
+        // data ichidagi JSON obyektni parse qilish
+        const parsedData = data;
+
+        // Namuna formatiga o'zgartirish
+        const newCountry = {
+          name: parsedData?.country?.en,
+          coords: parsedData?.coords,
+          time_stamp: dayjs(parsedData?.time_stamp).format('YYYY-MM-DD HH:mm:ss')
+        };
+
+        // Eski massivga yangi elementni qo'shish
+        setCountries((prevCountries) => [...prevCountries, newCountry]);
+
+        console.log('Updated countries:', countrys);
+      } catch (error) {
+        console.error('Error parsing data:', error);
+      }
+    });
+    socket.on('error', (data: any) => {
+      console.log(data);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnect.');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  // console.log(countrys);
 
   const init = (container: SVGSVGElement) => {
     const width = container.width.baseVal.value;
@@ -212,7 +269,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         return shuffled.slice(0, count);
       }
 
-      const attackCountries = getRandomCountries(countriesPool, 80);
+      const attackCountries = getRandomCountries(countrys, 80);
 
       const createArc = (source: number[], target: number[]) => {
         //@ts-ignore
@@ -224,7 +281,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
 
       // Function to animate arcs with fade-out effect
       function animateArc(country: any, i: number) {
-        const arcData = createArc(country.coords, uzbekistanCoords);
+        const arcData = createArc(country?.coords, uzbekistanCoords);
+        console.log(country)
 
         const label = svg
           .append('text')
@@ -254,9 +312,9 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           .append('circle')
           .attr('class', 'attack-circle')
           //@ts-ignore
-          .attr('cx', projection(country.coords)[0])
+          .attr('cx', projection(country?.coords)[0])
           //@ts-ignore
-          .attr('cy', projection(country.coords)[1])
+          .attr('cy', projection(country?.coords)[1])
           .attr('r', 5) // Circle radius set to 2px
           .style('opacity', 0); // Start with 0 opacity
 
@@ -267,7 +325,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           .ease(d3.easeSinInOut)
           .attr('stroke-dashoffset', 0)
           .on('start', function () {
-            setAttackCountries({ name: country.name, date: new Date() });
+            setAttackCountries({ name: country?.name, date: country?.time_stamp });
             label.transition().duration(0).style('opacity', 1);
 
             circle.transition().duration(0).style('opacity', 1);

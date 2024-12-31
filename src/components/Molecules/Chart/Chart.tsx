@@ -37,8 +37,8 @@ const Chart = ({ height = '300px', width, className, hostName, hostCount, title 
       value: val,
       itemStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: colors[idx][0] },
-          { offset: 1, color: colors[idx][1] }
+          { offset: 0, color: colors[idx]?.[0] },
+          { offset: 1, color: colors[idx]?.[1] }
         ])
       }
     }));

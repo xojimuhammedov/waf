@@ -38,15 +38,19 @@ function RightComponent() {
     onTime.push(dayjs(item.date).format('DD.MM.YYYY'));
   });
 
-  get(data, 'data.by_host')?.map((item: any) => {
-    hostCount.push(Number(item.count));
-  });
-  get(data, 'data.by_host')?.map((item: any) => {
-    hostName.push(item.host);
-  });
+  get(data, 'data.by_host')
+    ?.slice(0, 3)
+    ?.map((item: any) => {
+      hostCount.push(Number(item.count));
+    });
+  get(data, 'data.by_host')
+    ?.slice(0, 3)
+    ?.map((item: any) => {
+      hostName.push(item.host);
+    });
 
   return (
-    <div className="w-full flex flex-col h-full">
+    <div className="flex h-full w-full flex-col">
       <div style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }} className="flex-1">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Barcha hujumlar
@@ -56,17 +60,17 @@ function RightComponent() {
         </h3>
       </div>
       <div className="flex-1" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>
-        <p style={{ color: '#A3A3A3' }} className="pt-9 pl-10 text-lg font-medium">
+        <p style={{ color: '#A3A3A3' }} className="pl-10 pt-9 text-lg font-medium">
           Saytlar bo’yicha hujumlar
         </p>
-        <LineChart
+        {/* <LineChart
           className={'text-base'}
           hostName={hostName}
           hostCount={hostCount}
           title="Saytlar bo’yicha hujumlar"
-        />
+        /> */}
       </div>
-      <div className="pt-9 flex-1">
+      <div className="flex-1 pt-9">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Hujumlar dinamikasi
         </p>
