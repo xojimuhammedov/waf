@@ -27,7 +27,7 @@ function BottomComponent() {
     <div className="flex gap-8 px-10 pt-4">
       <div className="bottom-left w-1/2">
         <p style={{ color: '#A3A3A3' }} className="mb-4 text-lg font-medium">
-          TOP Hujumchi davlatlar
+          TOP Hujum manbalari
         </p>
         {countryData?.map((item: any, index) => (
           <div key={index} className="bottom-card relative mb-2 flex items-center justify-between">

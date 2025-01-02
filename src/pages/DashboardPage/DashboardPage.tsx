@@ -17,7 +17,7 @@ const DashboardPage = () => {
           </div>
           <div
             style={{ borderTop: '1px solid #292929'}}
-            className={'w-full h-[300px] flex-shrink-0 bg-[#131313] opacity-9 bottom-0 absolute'}>
+            className={'w-full h-[260px] flex-shrink-0 bg-[#131313] opacity-9 bottom-0 absolute'}>
             <BottomComponent />
           </div>
         </div>

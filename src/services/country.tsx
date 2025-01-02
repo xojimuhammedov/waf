@@ -33,13 +33,6 @@ export const countryData = [
     img: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/640px-Flag_of_Russia.svg.png',
     process: '58%',
     count: '150'
-  },
-  {
-    id: 6,
-    title: 'Belorusiya',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Flag_of_Belarus.svg/640px-Flag_of_Belarus.svg.png',
-    process: '45%',
-    count: '125'
   }
 ];
 

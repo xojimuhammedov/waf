@@ -161,8 +161,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     // Set up map projection
     const projection = d3
       .geoMercator()
-      .scale(170)
-      .translate([2.3 * width, 3.3 * height]);
+      .scale(190)
+      .translate([2.3 * width, 3.5 * height]);
 
     const path = d3.geoPath().projection(projection);
 
