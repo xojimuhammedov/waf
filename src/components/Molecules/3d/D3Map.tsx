@@ -14,9 +14,7 @@ type D3MapProps = {
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const ref = useRef<SVGSVGElement>(null);
   const token = storage.get('accessToken');
-  const [countrys, setCountries] = useState<{ name: string; coords: number[]; time_stamp: any }[]>(
-    []
-  );
+  const [countrys, setCountries] = useState<any>([]);
   const socketEnv: any = config.API_ROOT;
   useEffect(() => {
     if (ref.current) {
@@ -39,19 +37,20 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       console.log(data);
     });
     socket.on('log', (data: any) => {
+      console.log(data);
       try {
         // data ichidagi JSON obyektni parse qilish
-        const parsedData = data;
+        // const parsedData = data;
 
-        // Namuna formatiga o'zgartirish
-        const newCountry = {
-          name: parsedData?.country?.en,
-          coords: parsedData?.coords,
-          time_stamp: dayjs(parsedData?.time_stamp).format('YYYY-MM-DD HH:mm:ss')
-        };
+        // // Namuna formatiga o'zgartirish
+        // const newCountry = {
+        //   name: parsedData?.country_name_en,
+        //   coords: parsedData?.coords,
+        //   time_stamp: parsedData?.time_stamp
+        // };
 
         // Eski massivga yangi elementni qo'shish
-        setCountries((prevCountries) => [...prevCountries, newCountry]);
+        setCountries((prevCountries: any) => [...prevCountries, data]);
 
         console.log('Updated countries:', countrys);
       } catch (error) {
@@ -71,7 +70,6 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     };
   }, []);
 
-  // console.log(countrys);
 
   const init = (container: SVGSVGElement) => {
     const width = container.width.baseVal.value;
@@ -282,7 +280,6 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       // Function to animate arcs with fade-out effect
       function animateArc(country: any, i: number) {
         const arcData = createArc(country?.coords, uzbekistanCoords);
-        console.log(country)
 
         const label = svg
           .append('text')
@@ -291,7 +288,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           .attr('x', projection(country.coords)[0]) // Set x position
           //@ts-ignore
           .attr('y', projection(country.coords)[1] + 12) // Move down by 12px
-          .text(country.name)
+          .text(country.country_name_en)
           .style('opacity', 0); // Start with 0 opacity
 
         const path = svg
@@ -325,7 +322,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           .ease(d3.easeSinInOut)
           .attr('stroke-dashoffset', 0)
           .on('start', function () {
-            setAttackCountries({ name: country?.name, date: country?.time_stamp });
+            setAttackCountries({ name: country?.country_name_en, date: country?.time_stamp });
             label.transition().duration(0).style('opacity', 1);
 
             circle.transition().duration(0).style('opacity', 1);
