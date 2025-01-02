@@ -87,10 +87,26 @@
 
 .bottom-item {
   background-color: #292929;
-  transition: 0.3s all ease;
+  transition: 0.3s;
+  position: absolute;
+  z-index: 999;
+  top: 0;
+  height: 35px;
+  left: 0;
+  right: 0;
 }
 
-.bottom-item:hover {
+.bottom-items {
+  position: relative;
+  z-index: 1000;
+  transition: 0.3s;
+}
+
+.bottom-card {
+  transition: 0.3s;
+}
+
+.bottom-card:hover .bottom-item {
   background-color: #1d4834;
 }
 
