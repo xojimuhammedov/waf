@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import D3Map from '../../../components/Molecules/3d/D3Map';
 import dayjs from 'dayjs';
+import { forEach } from 'lodash';
 
 function TopComponent() {
   const [attackCountries, setAttackCountries] = useState<object[]>([]);
 
   const handleAttackCountriesChange = (country: object) => {
     setAttackCountries((prevCountries) => {
-      prevCountries.unshift(country);
-      return prevCountries.slice(0, 4);
+      const updatedCountries = [country, ...prevCountries]; // Yangi massiv yaratamiz
+      console.log(updatedCountries);
+      return updatedCountries.slice(0, 4); // Faqat oxirgi 4 elementni saqlaymiz
     });
   }
 
@@ -22,8 +24,12 @@ function TopComponent() {
           className={'flex pt-3 px-3 d-flex items-center'}>
           <div className="vibrate me-4"></div>
           <div>
-            <div className={'text-lg text-[#919191]'}>{value.name}</div>
-            <div>{dayjs(value.date).format("YYYY-MM-DD HH:mm:ss")}</div>
+            <div className={'text-md text-[#919191]'}>{value.name}
+              <span className={'italic text-m text-[#919191]'}>{value.city}</span>
+            </div>
+            <div>{value.ip_address} 
+              <i className={'text-xs'}>{dayjs(value.date).format("YYYY-MM-DD HH:mm:ss")}</i>
+            </div>
           </div>
         </div>)}
       </div>
@@ -32,4 +38,5 @@ function TopComponent() {
   );
 }
 
+//<div></div>
 export default TopComponent;

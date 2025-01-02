@@ -1,9 +1,9 @@
 /*@import "bootstrap/dist/css/bootstrap.min.css";*/
 
-@font-face {
+/*@font-face {
   font-family: localJuraFont;
   /*src: url("../public/fonts/Jura/static/Jura-Bold.ttf");*/
-}
+/*}*/
 
 * {
   font-family: Inter, Helvetica, sans-serif;

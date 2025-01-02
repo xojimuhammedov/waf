@@ -13,80 +13,156 @@ type D3MapProps = {
 
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const ref = useRef<SVGSVGElement>(null);
-  const token = storage.get('accessToken');
   const [countrys, setCountries] = useState<any>([]);
-  const socketEnv: any = config.API_ROOT;
   useEffect(() => {
     if (ref.current) {
       init(ref.current);
     }
   }, [ref.current]);
 
-  useEffect(() => {
-    const socket = io(socketEnv, {
-      extraHeaders: {
-        auth: `${token}`
-      }
-    });
-
-    socket.on('connect', () => {
-      console.log('Connected.');
-    });
-
-    socket.on('message', (data: any) => {
-      console.log(data);
-    });
-    socket.on('log', (data: any) => {
-      console.log(data);
-      try {
-        // data ichidagi JSON obyektni parse qilish
-        // const parsedData = data;
-
-        // // Namuna formatiga o'zgartirish
-        // const newCountry = {
-        //   name: parsedData?.country_name_en,
-        //   coords: parsedData?.coords,
-        //   time_stamp: parsedData?.time_stamp
-        // };
-
-        // Eski massivga yangi elementni qo'shish
-        setCountries((prevCountries: any) => [...prevCountries, data]);
-
-        console.log('Updated countries:', countrys);
-      } catch (error) {
-        console.error('Error parsing data:', error);
-      }
-    });
-    socket.on('error', (data: any) => {
-      console.log(data);
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Disconnect.');
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-
   const init = (container: SVGSVGElement) => {
     const width = container.width.baseVal.value;
     const height = container.height.baseVal.value;
+   // var attackCountries:any;
+   const uzbekistanCoords = [69.2401, 41.2995]  //Tashkent;
+  //const uzbekistanCoords = [64.5853, 41.3775];
+
+    const createArc = (source: number[], target: number[]) => {
+      //@ts-ignore
+      const interpolator = d3.geoInterpolate(source, target);
+      const midPoint = interpolator(0.5); // Midpoint for the curve
+      //@ts-ignore
+      return [projection(source), projection(midPoint), projection(target)];
+    };
+    var ind = 1;
+     // Function to animate arcs with fade-out effect
+     function animateArc(country: any, i: number) {
+      const arcData = createArc(country?.coords, uzbekistanCoords);
+
+      const label = svg
+        .append('text')
+        .attr('class', 'attack-label')
+        //@ts-ignore
+        .attr('x', projection(country.coords)[0]) // Set x position
+        //@ts-ignore
+        .attr('y', projection(country.coords)[1] + 12) // Move down by 12px
+        .text(country.name)
+        .style('opacity', 0); // Start with 0 opacity
+
+      const path = svg
+        .append('path')
+        .datum(arcData)
+        .attr('class', 'arc')
+        //@ts-ignore
+        .attr('d', d3.line().curve(d3.curveBasis)) // Curved lines with curveBasis
+        .attr('stroke-dasharray', function () {
+          const length = this.getTotalLength();
+          return length + ' ' + length;
+        })
+        .attr('stroke-dashoffset', function () {
+          return this.getTotalLength();
+        });
+
+      const circle = svg
+        .append('circle')
+        .attr('class', 'attack-circle')
+        //@ts-ignore
+        .attr('cx', projection(country?.coords)[0])
+        //@ts-ignore
+        .attr('cy', projection(country?.coords)[1])
+        .attr('r', 5) // Circle radius set to 2px
+        .style('opacity', 0); // Start with 0 opacity
+
+      path
+        .transition()
+        .delay(i * 1000)
+        .duration(3000)
+        .ease(d3.easeSinInOut)
+        .attr('stroke-dashoffset', 0)
+        .on('start', function () {
+          setAttackCountries({ name: country?.name, city: country?.city, date: country?.time_stamp, ip_address:country?.ip_address });
+          label.transition().duration(0).style('opacity', 1);
+
+          circle.transition().duration(0).style('opacity', 1);
+        })
+        .on('end', function () {
+          label.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
+
+          circle.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
+
+          path.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
+        });
+    };
+
+    function socketCreate()
+    {
+      const token = storage.get('accessToken');
+      const socketEnv: any = config.API_ROOT;
+ 
+      const socket = io(socketEnv, {
+        extraHeaders: {
+          auth: `${token}`
+        }
+      });
+  
+      socket.on('connect', () => {
+        console.log('Connected.');
+      });
+  
+      socket.on('message', (data: any) => {
+        console.log(data);
+      });
+      socket.on('log', (data: any) => {
+        console.log(data);
+  
+        
+        try {
+          // data ichidagi JSON obyektni parse qilish
+           const parsedData = data;
+  
+          // // Namuna formatiga o'zgartirish
+           const newCountry = {
+             name: parsedData?.country_name_en,
+             city: parsedData?.city_name_en,
+             coords: parsedData?.coords,
+             time_stamp: dayjs(new Date()),// parsedData?.time_stamp,
+             ip_address: parsedData?.ip_address
+           };
+  
+          // Eski massivga yangi elementni qo'shish
+          //setCountries((prevCountries: any) => [...prevCountries, data]);
+          //attackCountries = newCountry;
+          animateArc(newCountry, ind++);
+          console.log('Attacker country:', newCountry);
+        } catch (error) {
+          console.error('Error parsing data:', error);
+        }
+      });
+      socket.on('error', (data: any) => {
+        console.log(data);
+      });
+  
+      socket.on('disconnect', () => {
+        console.log('Disconnect.');
+      });
+  
+      //return () => {
+       // socket.disconnect();
+      //};
+    };
 
     // Create SVG container
     const svg = d3
       .select('svg[id="map"]')
       .attr('width', '100%')
-      .attr('height', '100%')
+      .attr('height', '80%')
       .style('background-color', 'transparent');
 
     // Set up map projection
     const projection = d3
       .geoMercator()
-      .scale(200)
-      .translate([2.1 * width, 4 * height]);
+      .scale(170)
+      .translate([2.3 * width, 3.3 * height]);
 
     const path = d3.geoPath().projection(projection);
 
@@ -115,10 +191,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           );
         });
 
-      // const uzbekistanCoords = [69.2401, 41.2995]  //Tashkent;
-      const uzbekistanCoords = [64.5853, 41.3775];
-
-      const countriesPool = [
+    
+     /*const countriesPool = [
         { name: 'India', coords: [78.9629, 20.5937] },
         { name: 'Russia', coords: [105.3188, 61.524] }, // Main Russia
         { name: 'Siberia', coords: [102.0, 60.0] }, // Siberian region
@@ -260,95 +334,35 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         { name: 'Solomon Islands', coords: [160.0, -9.0] },
         { name: 'New Zealand', coords: [174.8859, -40.9006] }
       ];
+      */
 
-      function getRandomCountries(pool: any, count: any) {
-        const shuffled = pool.sort(() => 0.5 - Math.random());
+     // function getRandomCountries(pool: any, count: any) {
+      //  const shuffled = pool.sort(() => 0.5 - Math.random());
 
-        return shuffled.slice(0, count);
-      }
+      //  return shuffled.slice(0, count);
+      //}
 
-      const attackCountries = getRandomCountries(countrys, 80);
+      //const attackCountries = getRandomCountries(countrys, 80);
 
-      const createArc = (source: number[], target: number[]) => {
-        //@ts-ignore
-        const interpolator = d3.geoInterpolate(source, target);
-        const midPoint = interpolator(0.5); // Midpoint for the curve
-        //@ts-ignore
-        return [projection(source), projection(midPoint), projection(target)];
-      };
+     
 
-      // Function to animate arcs with fade-out effect
-      function animateArc(country: any, i: number) {
-        const arcData = createArc(country?.coords, uzbekistanCoords);
+     
+      //attackCountries.forEach((country: any, i: number) => {
+       // animateArc(country, i);
+      //});
 
-        const label = svg
-          .append('text')
-          .attr('class', 'attack-label')
-          //@ts-ignore
-          .attr('x', projection(country.coords)[0]) // Set x position
-          //@ts-ignore
-          .attr('y', projection(country.coords)[1] + 12) // Move down by 12px
-          .text(country.country_name_en)
-          .style('opacity', 0); // Start with 0 opacity
-
-        const path = svg
-          .append('path')
-          .datum(arcData)
-          .attr('class', 'arc')
-          //@ts-ignore
-          .attr('d', d3.line().curve(d3.curveBasis)) // Curved lines with curveBasis
-          .attr('stroke-dasharray', function () {
-            const length = this.getTotalLength();
-            return length + ' ' + length;
-          })
-          .attr('stroke-dashoffset', function () {
-            return this.getTotalLength();
-          });
-
-        const circle = svg
-          .append('circle')
-          .attr('class', 'attack-circle')
-          //@ts-ignore
-          .attr('cx', projection(country?.coords)[0])
-          //@ts-ignore
-          .attr('cy', projection(country?.coords)[1])
-          .attr('r', 5) // Circle radius set to 2px
-          .style('opacity', 0); // Start with 0 opacity
-
-        path
-          .transition()
-          .delay(i * 1000)
-          .duration(3000)
-          .ease(d3.easeSinInOut)
-          .attr('stroke-dashoffset', 0)
-          .on('start', function () {
-            setAttackCountries({ name: country?.country_name_en, date: country?.time_stamp });
-            label.transition().duration(0).style('opacity', 1);
-
-            circle.transition().duration(0).style('opacity', 1);
-          })
-          .on('end', function () {
-            label.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
-
-            circle.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
-
-            path.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
-          });
-      }
-
-      attackCountries.forEach((country: any, i: number) => {
-        animateArc(country, i);
-      });
-
-      setInterval(
-        () => {
-          attackCountries.forEach((country: any, i: number) => {
-            animateArc(country, i);
-          });
-        },
-        attackCountries.length * 1000 + 1000
-      );
+      //setInterval(
+       // () => {
+         // attackCountries.forEach((country: any, i: number) => {
+           // animateArc(country, i);
+         // });
+       // },
+       // attackCountries.length * 1000 + 1000
+     // );
     });
+    
+    socketCreate();
+
   };
 
   return <svg ref={ref} id={'map'}></svg>;

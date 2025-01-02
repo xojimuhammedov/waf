@@ -72,7 +72,7 @@ function BottomComponent() {
               {item?.type}
             </p>
             <div
-              style={{ width: `${item?.count / 10}%` }}
+              style={{ width: `${item?.count > 550 ? 550: item?.count}px` }}
               className="bottom-item cursor-pointer rounded"></div>
             <p className="text-sm text-white">{item?.count}</p>
           </div>
