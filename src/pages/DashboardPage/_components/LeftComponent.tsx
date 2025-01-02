@@ -21,7 +21,7 @@ function LeftComponent() {
     params: {
       from:
         dayjs(value?.value?.startDate).format('YYYY-MM-DD') == 'Invalid Date'
-          ? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD')
+          ? dayjs(new Date()).subtract(30, 'day').format('YYYY-MM-DD')
           : dayjs(value?.value?.startDate).format('YYYY-MM-DD'),
       to:
         dayjs(value?.value?.endDate).format('YYYY-MM-DD') == 'Invalid Date'
