@@ -50,7 +50,7 @@ function BottomComponent() {
         {get(data, 'data')?.map((item: any, index: number) => (
           <div key={index} className="mb-2 flex items-center justify-between">
             <p
-              // style={{ width: item?.count }}
+              style={{ width: item?.count }}
               className="bottom-item flex h-[32px] cursor-pointer items-center gap-2 rounded px-2 text-sm text-white">
               <HujumIcon />
               {item?.type}
