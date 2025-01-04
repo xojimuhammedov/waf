@@ -1,13 +1,15 @@
 import LogoSvg from 'assets/icons/waf-logo.svg';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MenuButton from 'assets/icons/MenuButton';
 import MyTailwindPicker from 'components/Atoms/Form/MyTailwindDatePicker';
 import { Calendar } from 'lucide-react';
 import storage from 'services/storage';
 import { useDateRange } from 'context/DatePickerContext';
+import dayjs from 'dayjs';
 
 const Navbar = ({ setLoading }: any) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const now = new Date();
   const { setValue } = useDateRange();
   const value: any = useDateRange();
@@ -19,8 +21,13 @@ const Navbar = ({ setLoading }: any) => {
     .toString()
     .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
-  const handleValueChange = (newValue: any) => {
+  const handleValueChange = (newValue: { startDate: string; endDate: string }) => {
     setValue(newValue);
+
+    setSearchParams({
+      startDate: dayjs(newValue.startDate).format('YYYY-MM-DD'),
+      endDate: dayjs(newValue.endDate).format('YYYY-MM-DD')
+    });
   };
 
   const handleLogOut = () => {
@@ -44,7 +51,7 @@ const Navbar = ({ setLoading }: any) => {
             <MyTailwindPicker
               useRange={false}
               placeholder={'01.12.2024 - 20.12.2024'}
-              value={value?.value}
+              value={value.value}
               className="navbar-picker"
               onChange={handleValueChange}
               startIcon={<Calendar stroke="#9096A1" />}

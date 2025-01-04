@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import dayjs from 'dayjs';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 interface DateRange {
   startDate: string | null;
@@ -13,10 +15,22 @@ interface DateRangeContextProps {
 const DateRangeContext = createContext<DateRangeContextProps | undefined>(undefined);
 
 export const DateRangeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [params] = useSearchParams();
+  const startDate = params.get('startDate');
+  const endDate = params.get('endDate');
   const [value, setValue] = useState<DateRange>({
-    startDate: null,
-    endDate: null
+    startDate: startDate ?? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
+    endDate: endDate ?? dayjs(new Date()).format('YYYY-MM-DD')
   });
+
+  useEffect(() => {
+    if (!startDate || !endDate) {
+      setValue({
+        startDate: startDate ?? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
+        endDate: endDate ?? dayjs(new Date()).format('YYYY-MM-DD')
+      });
+    }
+  }, [startDate, endDate]);
 
   return (
     <DateRangeContext.Provider value={{ value, setValue }}>{children}</DateRangeContext.Provider>

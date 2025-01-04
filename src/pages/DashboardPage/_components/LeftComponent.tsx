@@ -6,9 +6,12 @@ import { useDateRange } from 'context/DatePickerContext';
 import dayjs from 'dayjs';
 import { useGetAllQuery } from 'hooks/api';
 import { get } from 'lodash';
+import { useSearchParams } from 'react-router-dom';
 
 function LeftComponent() {
-  const value: any = useDateRange();
+  const [params] = useSearchParams();
+  const startDate = params.get('startDate');
+  const endDate = params.get('endDate');
   const countData: any = [];
   const onTime: any = [];
 
@@ -20,13 +23,10 @@ function LeftComponent() {
     url: URLS.getStatisticsAccessLogs,
     params: {
       from:
-        dayjs(value?.value?.startDate).format('YYYY-MM-DD') == 'Invalid Date'
+        startDate == 'Invalid Date'
           ? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD')
-          : dayjs(value?.value?.startDate).format('YYYY-MM-DD'),
-      to:
-        dayjs(value?.value?.endDate).format('YYYY-MM-DD') == 'Invalid Date'
-          ? dayjs(new Date()).format('YYYY-MM-DD')
-          : dayjs(value?.value?.endDate).format('YYYY-MM-DD')
+          : startDate,
+      to: endDate == 'Invalid Date' ? dayjs(new Date()).format('YYYY-MM-DD') : endDate
     }
   });
 
@@ -44,7 +44,7 @@ function LeftComponent() {
     hostName.push(item.host);
   });
   return (
-    <div className="w-full flex flex-col h-full">
+    <div className="flex h-full w-full flex-col">
       <div style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }} className="flex-1">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           Barcha so’rovlar
@@ -54,7 +54,7 @@ function LeftComponent() {
         </h3>
       </div>
       <div className="flex-1" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>
-        <p style={{ color: '#A3A3A3' }} className="pt-9 pl-10 text-lg font-medium">
+        <p style={{ color: '#A3A3A3' }} className="pl-10 pt-9 text-lg font-medium">
           Saytlar bo’yicha so’rovlar
         </p>
         <LineChart
@@ -64,7 +64,7 @@ function LeftComponent() {
           title="Saytlar bo’yicha so’rovlar"
         />
       </div>
-      <div className="pt-9 flex-1">
+      <div className="flex-1 pt-9">
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
           So’rovlar dinamikasi
         </p>
