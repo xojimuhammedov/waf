@@ -17,18 +17,18 @@ function TopComponent() {
   // console.log(attackCountries)
 
   return (
-    <div className={'h-full relative'}>
-      <div className={'rounded px-3 absolute h-[250px] w-[400px] bg-[#00000077]'} style={{margin: 20}}>
+     <div className={'h-full relative'} >
+      <div className={'rounded px-3 absolute h-[250px] w-[400px] bg-[#00000077]'} style={{margin: 20, zIndex: 100}}>
         {attackCountries.map((value: any, index: number) => <div
           key={`${index}-${value}`}
           className={'flex pt-3 px-3 d-flex items-center'}>
           <div className="vibrate me-4"></div>
           <div>
             <div className={'text-md text-[#919191]'}>{value.name}
-              <span className={'italic text-m text-[#919191]'}>{value.city}</span>
+              <span className={'italic text-m text-[#919191] mg'}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{value.city}</span>
             </div>
             <div>{value.ip_address} 
-              <i className={'text-xs'}>{dayjs(value.date).format("YYYY-MM-DD HH:mm:ss")}</i>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i className={'text-xs'}>{dayjs(value.date).format("YYYY-MM-DD HH:mm:ss")}</i>
             </div>
           </div>
         </div>)}

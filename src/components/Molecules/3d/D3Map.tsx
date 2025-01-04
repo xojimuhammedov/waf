@@ -7,12 +7,17 @@ import { io } from 'socket.io-client';
 import config from 'configs';
 import dayjs from 'dayjs';
 
+
+var socket : any;
+
 type D3MapProps = {
   setAttackCountries: (data: object) => void;
 };
 
+
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const ref = useRef<SVGSVGElement>(null);
+  const zoomRef = useRef<any>(null);
   useEffect(() => {
     if (ref.current) {
       init(ref.current);
@@ -99,14 +104,24 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     }
 
     function socketCreate() {
+
+        console.log("Socket start!");
+        if(socket)
+         {
+          console.log("Socket already connected!");
+          return;
+        }
+
+        console.log("Socket create!");
       const token = storage.get('accessToken');
       const socketEnv: any = config.API_ROOT;
 
-      const socket = io(socketEnv, {
+       socket = io(socketEnv, {
         transports: ['websocket'],
-        extraHeaders: {
-          auth: `${token}`
-        }
+        auth: { 
+          token: `${token}`
+              }
+        
       });
 
       socket.on('connect', () => {
@@ -158,18 +173,48 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       .style('background-color', 'transparent');
 
     // Set up map projection
-    const projection = d3
+    var projection = d3
       .geoMercator()
       .scale(190)
       .translate([2.3 * width, 3.5 * height]);
 
+    function setProjection(event:any)
+    {
+      console.log("zoooomed");
+      var transform = event.transform;
+      projection.translate([transform.x, transform.y]).scale(transform.k);
+
+      console.log("zoooomed " + transform.x + " > " + transform.y + " > " + transform.k);
+    }
+
     const path = d3.geoPath().projection(projection);
+
+     
+     // Add zoom behavior
+     const zoom = d3.zoom<SVGSVGElement, unknown>()
+     .scaleExtent([1, 8])
+     .filter((event) => {
+      // Disable mouse wheel zoom, allow only drag
+      return !event.ctrlKey && !event.button && event.type !== 'wheel';
+      })
+     .on('zoom', (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
+      svg.select('g').attr('transform', event.transform.toString());
+     
+    //  setProjection(event);
+    
+     });
+
+      // Save zoom reference
+    zoomRef.current = zoom;
+
+   // Type assertion to handle the zoom call
+   (svg as unknown as d3.Selection<SVGSVGElement, unknown, null, undefined>).call(zoom);
 
     d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json').then((worldData: any) => {
       // @ts-ignore
       const countries: any = topojson.feature(worldData, worldData.objects.countries).features;
 
-      svg
+    /*  svg
         .selectAll('path')
         .data(countries)
         .enter()
@@ -188,7 +233,23 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           d3.select(this).attr('class', (d: any) =>
             d.id === '860' ? 'country country-target' : 'country'
           );
-        });
+        });*/
+        
+        const g = svg.append('g');
+
+        g.selectAll('path')
+          .data(countries)
+          .enter()
+          .append('path')
+          .attr('class', (d: any) => (d.id === '860' ? 'country country-target' : 'country'))
+          .attr('d', path as any)
+          .attr('id', (d: any) => d.id)
+          .on('mouseover', function() {
+            d3.select(this).attr('class', 'country country-hover');
+          })
+          .on('mouseout', function(this: any, event: any, d: any) {
+            d3.select(this).attr('class', d.id === '860' ? 'country country-target' : 'country');
+          });
 
       /*const countriesPool = [
         { name: 'India', coords: [78.9629, 20.5937] },
@@ -355,11 +416,76 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       // attackCountries.length * 1000 + 1000
       // );
     });
-
+   
     socketCreate();
+
+     // Cleanup
+     return () => {
+      svg.on('.zoom', null);
+    };
+    
   };
 
-  return <svg ref={ref} id={'map'}></svg>;
+  const handleZoomIn = () => {
+    if (!ref.current || !zoomRef.current) return;    
+
+    const svg = d3.select<SVGSVGElement, unknown>(ref.current);
+    const transform = d3.zoomTransform(svg.node()!);
+    
+    svg.transition()
+      .duration(300)
+      .call(
+        zoomRef.current.transform,
+        d3.zoomIdentity
+          .translate(transform.x, transform.y)
+          .scale(transform.k * 1.5)
+      );
+
+  };
+
+  const handleZoomOut = () => {
+    if (!ref.current || !zoomRef.current) return;
+    const svg = d3.select<SVGSVGElement, unknown>(ref.current);
+    const transform = d3.zoomTransform(svg.node()!);
+    
+    svg.transition()
+      .duration(300)
+      .call(
+        zoomRef.current.transform,
+        d3.zoomIdentity
+          .translate(transform.x, transform.y)
+          .scale(transform.k * 0.75)
+      );
+  };
+
+
+  return (
+    <div className="relative w-full h-full">
+      <svg ref={ref} id="map" />
+      
+      {/* Control Panel */}
+      <div className="absolute top-4 right-4 bg-[#00000077] p-4 rounded shadow-lg ">
+        <div className="flex gap-2 mb-2">
+          <button
+            onClick={handleZoomIn}
+            className="w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
+            style={{ borderColor: '#454545' }}
+          >
+            +
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
+            style={{ borderColor: '#454545' }}
+          >
+            -
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
+
+
 
 export default D3Map;
