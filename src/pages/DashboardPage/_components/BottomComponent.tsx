@@ -34,7 +34,7 @@ function BottomComponent() {
           <div key={index} className="bottom-card relative mb-2 flex items-center justify-between">
             <p className="bottom-items flex h-[32px] cursor-pointer items-center gap-2 px-2 text-sm text-white">
               <img
-                src={`/public/${item.image_src}`}
+                src={`${item.image_src}`}
                 className="bottom-items h-6 w-6 rounded-full object-cover"
                 alt=""
               />
