@@ -5,6 +5,7 @@ import { URLS } from 'constants/url';
 import dayjs from 'dayjs';
 import { useGetAllQuery } from 'hooks/api';
 import { get } from 'lodash';
+import { useEffect, useState } from 'react';
 
 function LeftComponent() {
   const storedValue: any = JSON.parse(localStorage.getItem('dateRange') || '{}');
@@ -14,12 +15,51 @@ function LeftComponent() {
   const hostName: any = [];
   const hostCount: any = [];
 
+  const [dateRange, setDateRange] = useState(() => {
+    const storedValue = JSON.parse(localStorage.getItem('dateRange') || '{}');
+    return {
+      startDate: storedValue?.startDate
+        ? dayjs(storedValue.startDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
+      endDate: storedValue?.endDate
+        ? dayjs(storedValue.endDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).format('YYYY-MM-DD')
+    };
+  });
+
+  const updateDateRangeFromLocalStorage = () => {
+    const storedValue = JSON.parse(localStorage.getItem('dateRange') || '{}');
+    setDateRange({
+      startDate: storedValue?.startDate
+        ? dayjs(storedValue.startDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
+      endDate: storedValue?.endDate
+        ? dayjs(storedValue.endDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).format('YYYY-MM-DD')
+    });
+  };
+
+  // LocalStorage ni kuzatish
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const storedValue = JSON.parse(localStorage.getItem('dateRange') || '{}');
+      if (
+        storedValue?.startDate !== dateRange.startDate ||
+        storedValue?.endDate !== dateRange.endDate
+      ) {
+        updateDateRangeFromLocalStorage();
+      }
+    }, 100); // Har 100ms da o'zgarishni tekshirish
+
+    return () => clearInterval(interval); // Intervalni tozalash
+  }, [dateRange]);
+
   const { data } = useGetAllQuery({
     key: KEYS.getStatisticsAccessLogs,
     url: URLS.getStatisticsAccessLogs,
     params: {
-      from: dayjs(storedValue?.startDate).add(5, 'hour').format('YYYY-MM-DD'),
-      to: dayjs(storedValue.endDate).add(5, 'hour').format('YYYY-MM-DD')
+      from: dateRange.startDate,
+      to: dateRange.endDate
     }
   });
 

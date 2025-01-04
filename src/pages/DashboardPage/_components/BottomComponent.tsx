@@ -4,15 +4,53 @@ import { URLS } from 'constants/url';
 import dayjs from 'dayjs';
 import { useGetAllQuery } from 'hooks/api';
 import { get } from 'lodash';
+import { useEffect, useState } from 'react';
 
 function BottomComponent() {
-  const storedValue: any = JSON.parse(localStorage.getItem('dateRange') || '{}');
+  const [dateRange, setDateRange] = useState(() => {
+    const storedValue = JSON.parse(localStorage.getItem('dateRange') || '{}');
+    return {
+      startDate: storedValue?.startDate
+        ? dayjs(storedValue.startDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
+      endDate: storedValue?.endDate
+        ? dayjs(storedValue.endDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).format('YYYY-MM-DD')
+    };
+  });
+
+  const updateDateRangeFromLocalStorage = () => {
+    const storedValue = JSON.parse(localStorage.getItem('dateRange') || '{}');
+    setDateRange({
+      startDate: storedValue?.startDate
+        ? dayjs(storedValue.startDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
+      endDate: storedValue?.endDate
+        ? dayjs(storedValue.endDate).add(5, 'hour').format('YYYY-MM-DD')
+        : dayjs(new Date()).format('YYYY-MM-DD')
+    });
+  };
+
+  // LocalStorage ni kuzatish
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const storedValue = JSON.parse(localStorage.getItem('dateRange') || '{}');
+      if (
+        storedValue?.startDate !== dateRange.startDate ||
+        storedValue?.endDate !== dateRange.endDate
+      ) {
+        updateDateRangeFromLocalStorage();
+      }
+    }, 100); // Har 100ms da o'zgarishni tekshirish
+
+    return () => clearInterval(interval); // Intervalni tozalash
+  }, [dateRange]);
   const { data } = useGetAllQuery({
     key: KEYS.getStatisticsType,
     url: URLS.getStatisticsType,
     params: {
-      from: dayjs(storedValue?.startDate).add(5, 'hour').format('YYYY-MM-DD'),
-      to: dayjs(storedValue.endDate).add(5, 'hour').format('YYYY-MM-DD')
+      from: dateRange.startDate,
+      to: dateRange.endDate
     }
   });
 
@@ -20,8 +58,8 @@ function BottomComponent() {
     key: KEYS.getStatisticsCountries,
     url: URLS.getStatisticsCountries,
     params: {
-      from: dayjs(storedValue?.startDate).add(5, 'hour').format('YYYY-MM-DD'),
-      to: dayjs(storedValue.endDate).add(5, 'hour').format('YYYY-MM-DD')
+      from: dateRange.startDate,
+      to: dateRange.endDate
     }
   });
   return (
@@ -34,14 +72,14 @@ function BottomComponent() {
           <div key={index} className="bottom-card relative mb-2 flex items-center justify-between">
             <p className="bottom-items flex h-[32px] cursor-pointer items-center gap-2 px-2 text-sm text-white">
               <img
-                src={`${item.image_src}`}
+                src={`/flags/icon/${item?.country_code?.trim()}.png`}
                 className="bottom-items h-6 w-6 rounded-full object-cover"
                 alt=""
               />
               {item?.country_name_en}
             </p>
             <div
-              style={{ width: `${item?.country_count > 550 ? 550 : item?.country_count}px` }}
+              style={{ width: `${item?.procent}%` }}
               className="bottom-item cursor-pointer rounded"></div>
             <p className="text-sm text-white">{item?.country_count}</p>
           </div>
@@ -58,7 +96,7 @@ function BottomComponent() {
               {item?.type}
             </p>
             <div
-              style={{ width: `${item?.count > 550 ? 550 : item?.count}px` }}
+              style={{ width: `${item?.procent}%` }}
               className="bottom-item cursor-pointer rounded"></div>
             <p className="text-sm text-white">{item?.count}</p>
           </div>
