@@ -1,10 +1,10 @@
 import React from 'react';
 import Navbar from './Navbar';
 
-const Header = () => {
+const Header = ({ setOpen }: any) => {
   return (
     <header className="flex h-full w-full items-center">
-      <Navbar />
+      <Navbar setOpen={setOpen} />
     </header>
   );
 };

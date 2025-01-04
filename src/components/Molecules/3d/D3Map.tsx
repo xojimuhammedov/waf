@@ -13,7 +13,6 @@ type D3MapProps = {
 
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const ref = useRef<SVGSVGElement>(null);
-  const [countrys, setCountries] = useState<any>([]);
   useEffect(() => {
     if (ref.current) {
       init(ref.current);
@@ -23,9 +22,9 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const init = (container: SVGSVGElement) => {
     const width = container.width.baseVal.value;
     const height = container.height.baseVal.value;
-   // var attackCountries:any;
-   const uzbekistanCoords = [69.2401, 41.2995]  //Tashkent;
-  //const uzbekistanCoords = [64.5853, 41.3775];
+    // var attackCountries:any;
+    const uzbekistanCoords = [69.2401, 41.2995]; //Tashkent;
+    //const uzbekistanCoords = [64.5853, 41.3775];
 
     const createArc = (source: number[], target: number[]) => {
       //@ts-ignore
@@ -35,8 +34,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       return [projection(source), projection(midPoint), projection(target)];
     };
     var ind = 1;
-     // Function to animate arcs with fade-out effect
-     function animateArc(country: any, i: number) {
+    // Function to animate arcs with fade-out effect
+    function animateArc(country: any, i: number) {
       const arcData = createArc(country?.coords, uzbekistanCoords);
 
       const label = svg
@@ -80,7 +79,12 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         .ease(d3.easeSinInOut)
         .attr('stroke-dashoffset', 0)
         .on('start', function () {
-          setAttackCountries({ name: country?.name, city: country?.city, date: country?.time_stamp, ip_address:country?.ip_address });
+          setAttackCountries({
+            name: country?.name,
+            city: country?.city,
+            date: country?.time_stamp,
+            ip_address: country?.ip_address
+          });
           label.transition().duration(0).style('opacity', 1);
 
           circle.transition().duration(0).style('opacity', 1);
@@ -92,46 +96,42 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
 
           path.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
         });
-    };
+    }
 
-    function socketCreate()
-    {
+    function socketCreate() {
       const token = storage.get('accessToken');
       const socketEnv: any = config.API_ROOT;
- 
+
       const socket = io(socketEnv, {
+        transports: ['websocket'],
         extraHeaders: {
           auth: `${token}`
         }
       });
-  
+
       socket.on('connect', () => {
         console.log('Connected.');
       });
-  
+
       socket.on('message', (data: any) => {
         console.log(data);
       });
       socket.on('log', (data: any) => {
         console.log(data);
-  
-        
+
         try {
           // data ichidagi JSON obyektni parse qilish
-           const parsedData = data;
-  
+          const parsedData = data;
+
           // // Namuna formatiga o'zgartirish
-           const newCountry = {
-             name: parsedData?.country_name_en,
-             city: parsedData?.city_name_en,
-             coords: parsedData?.coords,
-             time_stamp: dayjs(new Date()),// parsedData?.time_stamp,
-             ip_address: parsedData?.ip_address
-           };
-  
-          // Eski massivga yangi elementni qo'shish
-          //setCountries((prevCountries: any) => [...prevCountries, data]);
-          //attackCountries = newCountry;
+          const newCountry = {
+            name: parsedData?.country_name_en,
+            city: parsedData?.city_name_en,
+            coords: parsedData?.coords,
+            time_stamp: dayjs(new Date()), // parsedData?.time_stamp,
+            ip_address: parsedData?.ip_address
+          };
+
           animateArc(newCountry, ind++);
           console.log('Attacker country:', newCountry);
         } catch (error) {
@@ -141,15 +141,15 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       socket.on('error', (data: any) => {
         console.log(data);
       });
-  
+
       socket.on('disconnect', () => {
         console.log('Disconnect.');
       });
-  
+
       //return () => {
-       // socket.disconnect();
+      // socket.disconnect();
       //};
-    };
+    }
 
     // Create SVG container
     const svg = d3
@@ -191,8 +191,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           );
         });
 
-    
-     /*const countriesPool = [
+      /*const countriesPool = [
         { name: 'India', coords: [78.9629, 20.5937] },
         { name: 'Russia', coords: [105.3188, 61.524] }, // Main Russia
         { name: 'Siberia', coords: [102.0, 60.0] }, // Siberian region
@@ -336,7 +335,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       ];
       */
 
-     // function getRandomCountries(pool: any, count: any) {
+      // function getRandomCountries(pool: any, count: any) {
       //  const shuffled = pool.sort(() => 0.5 - Math.random());
 
       //  return shuffled.slice(0, count);
@@ -344,25 +343,21 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
 
       //const attackCountries = getRandomCountries(countrys, 80);
 
-     
-
-     
       //attackCountries.forEach((country: any, i: number) => {
-       // animateArc(country, i);
+      // animateArc(country, i);
       //});
 
       //setInterval(
-       // () => {
-         // attackCountries.forEach((country: any, i: number) => {
-           // animateArc(country, i);
-         // });
-       // },
-       // attackCountries.length * 1000 + 1000
-     // );
+      // () => {
+      // attackCountries.forEach((country: any, i: number) => {
+      // animateArc(country, i);
+      // });
+      // },
+      // attackCountries.length * 1000 + 1000
+      // );
     });
-    
-    socketCreate();
 
+    socketCreate();
   };
 
   return <svg ref={ref} id={'map'}></svg>;

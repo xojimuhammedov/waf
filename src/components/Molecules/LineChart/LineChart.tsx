@@ -73,7 +73,7 @@ const ApexChart = ({ countData, time, title }: any) => {
           options={chartState.options}
           series={chartState.series}
           type="area"
-          height={'100%'}
+          height={'230px'}
         />
       </div>
       <div id="html-dist"></div>

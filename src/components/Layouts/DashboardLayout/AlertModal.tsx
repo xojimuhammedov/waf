@@ -1,10 +1,7 @@
 import MyButton from 'components/Atoms/MyButton/MyButton';
 import MyModal from 'components/Atoms/MyModal';
 
-
 function AlertModal({ onClose, show, handleLogOut }: any) {
-  
-
   return (
     <>
       <MyModal
