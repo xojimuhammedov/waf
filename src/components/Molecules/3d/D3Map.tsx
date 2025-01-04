@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 //@ts-ignore
 import * as topojson from 'topojson-client';
@@ -123,7 +123,6 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           // data ichidagi JSON obyektni parse qilish
           const parsedData = data;
 
-          // // Namuna formatiga o'zgartirish
           const newCountry = {
             name: parsedData?.country_name_en,
             city: parsedData?.city_name_en,
