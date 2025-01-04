@@ -43,7 +43,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     function animateArc(country: any, i: number) {
       const arcData = createArc(country?.coords, uzbekistanCoords);
 
-      const label = svg
+      const label = g
         .append('text')
         .attr('class', 'attack-label')
         //@ts-ignore
@@ -53,7 +53,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         .text(country.name)
         .style('opacity', 0); // Start with 0 opacity
 
-      const path = svg
+      const path = g
         .append('path')
         .datum(arcData)
         .attr('class', 'arc')
@@ -67,7 +67,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           return this.getTotalLength();
         });
 
-      const circle = svg
+      const circle = g
         .append('circle')
         .attr('class', 'attack-circle')
         //@ts-ignore
@@ -169,7 +169,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     const svg = d3
       .select('svg[id="map"]')
       .attr('width', '100%')
-      .attr('height', '80%')
+      .attr('height', '90%')
       .style('background-color', 'transparent');
 
     // Set up map projection
@@ -178,15 +178,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       .scale(190)
       .translate([2.3 * width, 3.5 * height]);
 
-    function setProjection(event:any)
-    {
-      console.log("zoooomed");
-      var transform = event.transform;
-      projection.translate([transform.x, transform.y]).scale(transform.k);
-
-      console.log("zoooomed " + transform.x + " > " + transform.y + " > " + transform.k);
-    }
-
+    const g = svg.append('g');
     const path = d3.geoPath().projection(projection);
 
      
@@ -198,8 +190,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       return !event.ctrlKey && !event.button && event.type !== 'wheel';
       })
      .on('zoom', (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
-      svg.select('g').attr('transform', event.transform.toString());
-     
+      //svg.select('g').attr('transform', event.transform.toString());
+      g.attr('transform', event.transform.toString());
     //  setProjection(event);
     
      });
@@ -214,28 +206,29 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       // @ts-ignore
       const countries: any = topojson.feature(worldData, worldData.objects.countries).features;
 
-    /*  svg
-        .selectAll('path')
-        .data(countries)
-        .enter()
-        .append('path')
-        //@ts-ignore
-        .attr('class', (d) => (d.id === '860' ? 'country country-target' : 'country'))
-        //@ts-ignore
-        .attr('d', path)
-        //@ts-ignore
-        .attr('id', (d) => d.id)
-        .on('mouseover', function () {
-          d3.select(this).attr('class', 'country country-hover');
-        })
-        .on('mouseout', function (d) {
-          //@ts-ignore
-          d3.select(this).attr('class', (d: any) =>
-            d.id === '860' ? 'country country-target' : 'country'
-          );
-        });*/
-        
-        const g = svg.append('g');
+      // Background grid effect
+      const gridSize = 30;
+      const gridOpacity = 0.1;
+
+      svg.append('defs')
+          .append('pattern')
+          .attr('id', 'grid')
+          .attr('width', gridSize)
+          .attr('height', gridSize)
+          .attr('patternUnits', 'userSpaceOnUse')
+          .append('path')
+          .attr('d', `M ${gridSize} 0 L 0 0 0 ${gridSize}`)
+          .style('fill', 'none')
+          .style('stroke', '#0ff')
+          .style('stroke-width', '0.5')
+          .style('opacity', gridOpacity);
+
+      svg.append('rect')
+          .attr('width', '100%')
+          .attr('height', '100%')
+          .attr('z-index', '-10')
+          .style('fill', 'url(#grid)');
+
 
         g.selectAll('path')
           .data(countries)
@@ -250,6 +243,21 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           .on('mouseout', function(this: any, event: any, d: any) {
             d3.select(this).attr('class', d.id === '860' ? 'country country-target' : 'country');
           });
+
+
+      // Add local time display
+      const timeDisplay = svg.append('text')
+      .attr('x', "8%")
+      .attr('y', "77%")
+      .attr('text-anchor', 'end')
+      .attr('class', 'time-display');
+
+      // Update time
+      function updateTime() {
+      const now = new Date();
+      timeDisplay.text(now.toLocaleTimeString('uz-UZ', { hour12: false }));
+      }
+      setInterval(updateTime, 1000);
 
       /*const countriesPool = [
         { name: 'India', coords: [78.9629, 20.5937] },
@@ -438,7 +446,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         zoomRef.current.transform,
         d3.zoomIdentity
           .translate(transform.x, transform.y)
-          .scale(transform.k * 1.5)
+          .scale(transform.k * 1.10)
       );
 
   };
@@ -454,7 +462,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         zoomRef.current.transform,
         d3.zoomIdentity
           .translate(transform.x, transform.y)
-          .scale(transform.k * 0.75)
+          .scale(transform.k * 0.80)
       );
   };
 

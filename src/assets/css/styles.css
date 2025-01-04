@@ -57,6 +57,16 @@
   opacity: 0.1; /* Slightly transparent */
 }
 
+/* Time display */
+.time-display {
+  fill: #0ff;
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  filter: drop-shadow(0 0 5px #0ff);
+}
+
+
+
 .vibrate {
   width: 20px;
   height: 20px;

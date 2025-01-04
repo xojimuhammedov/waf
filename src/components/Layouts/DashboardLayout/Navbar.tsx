@@ -14,13 +14,13 @@ const Navbar = ({ setOpen }: any) => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
-  const formattedDate = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1)
+  /*const formattedDate = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1)
     .toString()
     .padStart(2, '0')}.${now.getFullYear()} ${now
     .getHours()
     .toString()
     .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
+*/
   const handleValueChange = (newValue: { startDate: string; endDate: string }) => {
     setValue(newValue);
   };
@@ -36,9 +36,10 @@ const Navbar = ({ setOpen }: any) => {
         <div className="flex items-center gap-8">
           {isHomePage && (
             <>
-              <p style={{ color: '#78EDA2' }} className="cursor-pointer text-2xl font-light">
+             {/* <p style={{ color: '#78EDA2' }} className="cursor-pointer text-2xl font-light">
                 {formattedDate}
               </p>
+            */}
               <div className="navbar-picker w-[320px]">
                 <MyTailwindPicker
                   useRange={false}
