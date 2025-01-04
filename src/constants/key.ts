@@ -46,5 +46,6 @@ export const KEYS = {
   getApplicationChart: 'getApplicationChart',
   getStatisticsAttacks: 'getStatisticsAttacks',
   getStatisticsAccessLogs: 'getStatisticsAccessLogs',
-  getStatisticsType: 'getStatisticsType'
+  getStatisticsType: 'getStatisticsType',
+  getStatisticsCountries: 'getStatisticsCountries'
 };

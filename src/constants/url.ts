@@ -47,5 +47,6 @@ export const URLS = {
   getApplicationChart: '/api/v2/activewindow/get-bar-chart',
   getStatisticsAttacks: '/api/statistics/attacks',
   getStatisticsAccessLogs: '/api/statistics/accesslog',
-  getStatisticsType: '/api/statistics/attacks/type'
+  getStatisticsType: '/api/statistics/attacks/type',
+  getStatisticsCountries: '/api/statistics/attacks/countries'
 };

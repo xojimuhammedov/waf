@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 interface DateRange {
   startDate: string | null;
@@ -14,23 +13,30 @@ interface DateRangeContextProps {
 
 const DateRangeContext = createContext<DateRangeContextProps | undefined>(undefined);
 
-export const DateRangeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [params] = useSearchParams();
-  const startDate = params.get('startDate');
-  const endDate = params.get('endDate');
-  const [value, setValue] = useState<DateRange>({
-    startDate: startDate ?? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
-    endDate: endDate ?? dayjs(new Date()).format('YYYY-MM-DD')
-  });
+const LOCAL_STORAGE_KEY = 'dateRange';
 
-  useEffect(() => {
-    if (!startDate || !endDate) {
-      setValue({
-        startDate: startDate ?? dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
-        endDate: endDate ?? dayjs(new Date()).format('YYYY-MM-DD')
-      });
+export const DateRangeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const getInitialValue = () => {
+    const storedValue = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (storedValue) {
+      try {
+        return JSON.parse(storedValue); // LocalStorage-dagi qiymatni yuklash
+      } catch (error) {
+        console.error('Error parsing localStorage:', error);
+      }
     }
-  }, [startDate, endDate]);
+    // Agar localStorage bo'sh bo'lsa, standart qiymatlarni qaytarish
+    return {
+      startDate: dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD'),
+      endDate: dayjs(new Date()).format('YYYY-MM-DD')
+    };
+  };
+  const [value, setValue] = useState(getInitialValue);
+
+  // LocalStorage-ni har safar qiymat o'zgarsa yangilash
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(value));
+  }, [value]);
 
   return (
     <DateRangeContext.Provider value={{ value, setValue }}>{children}</DateRangeContext.Provider>

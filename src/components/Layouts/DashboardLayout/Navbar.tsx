@@ -6,10 +6,8 @@ import MyTailwindPicker from 'components/Atoms/Form/MyTailwindDatePicker';
 import { Calendar } from 'lucide-react';
 import storage from 'services/storage';
 import { useDateRange } from 'context/DatePickerContext';
-import dayjs from 'dayjs';
 
-const Navbar = ({ setLoading }: any) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+const Navbar = () => {
   const now = new Date();
   const { setValue } = useDateRange();
   const value: any = useDateRange();
@@ -23,11 +21,6 @@ const Navbar = ({ setLoading }: any) => {
 
   const handleValueChange = (newValue: { startDate: string; endDate: string }) => {
     setValue(newValue);
-
-    setSearchParams({
-      startDate: dayjs(newValue.startDate).format('YYYY-MM-DD'),
-      endDate: dayjs(newValue.endDate).format('YYYY-MM-DD')
-    });
   };
 
   const handleLogOut = () => {
