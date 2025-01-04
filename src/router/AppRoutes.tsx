@@ -27,7 +27,7 @@ function AppRoutes() {
           <Route key={key} path={evt.path} element={evt.element} />
         ))}
         {PrivateRoutes.map((evt: any, key: number) => (
-          <Route key={key} path={evt.path} element={<DashboardLayout setLoading={setLoading} />}>
+          <Route key={key} path={evt.path} element={<DashboardLayout />}>
             <Route index element={evt.element} />
           </Route>
         ))}

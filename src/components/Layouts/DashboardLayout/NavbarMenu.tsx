@@ -104,8 +104,6 @@ const CustomDropdownMenu: React.FC<CustomDropdownMenuProps> = ({ menuItem }) => 
 };
 
 const NavbarMenu = () => {
-  
-
   const menuItems: MenuItem[] = [
     {
       label: 'Dashboard',
