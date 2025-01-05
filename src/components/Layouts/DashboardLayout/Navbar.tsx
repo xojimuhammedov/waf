@@ -43,7 +43,7 @@ const Navbar = ({ setOpen }: any) => {
               <div className="navbar-picker w-[320px]">
                 <MyTailwindPicker
                   useRange={false}
-                  placeholder={'01.12.2024 - 20.12.2024'}
+                  placeholder={'dd.MM.yyyy - dd.MM.yyyy'}
                   value={value.value}
                   className="navbar-picker"
                   onChange={handleValueChange}

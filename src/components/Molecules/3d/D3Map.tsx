@@ -43,7 +43,61 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     function animateArc(country: any, i: number) {
       const arcData = createArc(country?.coords, uzbekistanCoords);
 
-      const label = g
+
+      // Card-like label group creation
+const markerGroup = g
+.append('g')
+.attr('class', 'marker-group')
+//@ts-ignore
+.attr('transform', `translate(${projection(country.coords)[0]}, ${projection(country.coords)[1]})`)
+.style('opacity', 0);
+
+// Add background rectangle (card)
+const label = markerGroup
+.append('rect')
+.attr('class', 'label-background')
+.attr('x', 0)
+.attr('y', -20)
+.attr('width', 150)
+.attr('height', 40)
+.attr('rx', 8) // Rounded corners
+.attr('ry', 8)
+.style('stroke', 'url(#cardBorder)'); // Apply gradient as stroke
+
+// Add circle (country flag/icon)
+const circle = markerGroup
+.append('circle')
+.attr('class', 'attack-circle')
+.attr('cx', 6)
+.attr('cy', 2)
+.attr('r', 8)
+.style('opacity', 0);
+
+// Add text (country name)
+const countryName = markerGroup
+.append('text')
+.attr('class', 'attack-label country-name')
+.attr('x', 25)
+.attr('y', -2)
+.text(country.name);
+
+// Add IP address
+const ipAddress = markerGroup
+.append('text')
+.attr('class', 'attack-label ip-address')
+.attr('x', 25)
+.attr('y', 12)
+.text(country.ip_address);
+
+// Add animations
+/*markerGroup
+.style('opacity', 0)
+.transition()
+.duration(500)
+.style('opacity', 1);
+*/
+
+     /* const label = g
         .append('text')
         .attr('class', 'attack-label')
         //@ts-ignore
@@ -53,6 +107,17 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         .text(country.name)
         .style('opacity', 0); // Start with 0 opacity
 
+
+        const circle = g
+        .append('circle')
+        .attr('class', 'attack-circle')
+        //@ts-ignore
+        .attr('cx', projection(country?.coords)[0])
+        //@ts-ignore
+        .attr('cy', projection(country?.coords)[1])
+        .attr('r', 5) // Circle radius set to 2px
+        .style('opacity', 0); // Start with 0 opacity
+*/
       const path = g
         .append('path')
         .datum(arcData)
@@ -66,16 +131,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         .attr('stroke-dashoffset', function () {
           return this.getTotalLength();
         });
-
-      const circle = g
-        .append('circle')
-        .attr('class', 'attack-circle')
-        //@ts-ignore
-        .attr('cx', projection(country?.coords)[0])
-        //@ts-ignore
-        .attr('cy', projection(country?.coords)[1])
-        .attr('r', 5) // Circle radius set to 2px
-        .style('opacity', 0); // Start with 0 opacity
+        
+      
 
       path
         .transition()
@@ -90,12 +147,14 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
             date: country?.time_stamp,
             ip_address: country?.ip_address
           });
+          markerGroup.transition().duration(0).style('opacity', 1);
+          
           label.transition().duration(0).style('opacity', 1);
 
-          circle.transition().duration(0).style('opacity', 1);
+          circle.transition().duration(2).style('opacity', 1);
         })
         .on('end', function () {
-          label.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
+          markerGroup.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
 
           circle.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
 
