@@ -89,14 +89,14 @@ const Chart = ({ height = '300px', width, className, hostName, hostCount, title 
   };
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full pb-0 mb-0">
       <ReactEcharts
         option={options}
         style={{ height, width }}
         className={twMerge('w-full', className)}
       />
 
-      <div className="flex flex-wrap items-center justify-center gap-4 pb-8 pl-[10px]">
+      <div className="flex flex-wrap items-center justify-center gap-4 pb-5 pl-[10px]">
         {hostName?.map((legend: any, idx: any) => (
           <div key={idx} className="flex cursor-pointer items-center gap-2">
             <span

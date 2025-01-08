@@ -8,7 +8,7 @@ const DashboardPage = () => {
   return (
     <div className="h-full w-full bg-[#131313]" style={{ boxSizing: 'border-box' }}>
       <div className="flex h-full justify-between">
-        <div className="dashboard-left w-1/4 px-6 pt-11">
+        <div className="dashboard-left w-1/4 px-6">
           <LeftComponent />
         </div>
         <div className="w-full relative">
@@ -21,7 +21,7 @@ const DashboardPage = () => {
             <BottomComponent />
           </div>
         </div>
-        <div className="dashboard-right w-1/4 px-6 pt-11">
+        <div className="dashboard-right w-1/4 px-6">
           <RightComponent />
         </div>
       </div>

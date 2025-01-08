@@ -78,14 +78,16 @@ function LeftComponent() {
   });
   return (
     <div className="flex h-full w-full flex-col">
-      <div style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }} className="flex-1">
+      <div style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }} className="flex-1 flex items-center">
+      <div>
         <p style={{ color: '#A3A3A3' }} className="pl-10 text-lg font-medium">
-          Barcha so’rovlar
+          Barcha so'rovlar
         </p>
-        <h3 className="mb-20 mt-2 pl-10 text-5xl font-medium text-white">
+        <h3 className="mt-2 pl-10 text-5xl font-medium text-white">
           {get(data, 'data.total')}
         </h3>
       </div>
+    </div>
       <div className="flex-1" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.1)' }}>
         <p style={{ color: '#A3A3A3' }} className="pl-10 pt-9 text-lg font-medium">
           Saytlar bo’yicha so’rovlar

@@ -63,7 +63,7 @@ function BottomComponent() {
     }
   });
   return (
-    <div className="flex gap-8 px-10 pt-4">
+    <div className="flex gap-8 px-10 pt-2">
       <div className="bottom-left w-1/2">
         <p style={{ color: '#A3A3A3' }} className="mb-4 text-lg font-medium">
           TOP Hujum manbalari
