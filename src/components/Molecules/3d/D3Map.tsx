@@ -19,6 +19,7 @@ type D3MapProps = {
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const ref = useRef<SVGSVGElement>(null);
   const zoomRef = useRef<any>(null);
+  const mapGroupRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   useEffect(() => {
     if (ref.current) {
       init(ref.current);
@@ -44,8 +45,13 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     function animateArc(country: any, i: number) {
       const arcData = createArc(country?.coords, uzbekistanCoords);
 
+      // Create a separate group for animations that will be removed
+      const animationGroup = mapGroupRef.current!
+        .append('g')
+        .attr('class', 'animation-group');
+
       // Card-like label group creation
-      const markerGroup = g
+      const markerGroup = animationGroup
       .append('g')
       .attr('class', 'marker-group')
       //@ts-ignore
@@ -89,46 +95,16 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       .attr('y', 12)
       .text(country.ip_address);
 
-      // Add animations
-      /*markerGroup
-      .style('opacity', 0)
-      .transition()
-      .duration(500)
-      .style('opacity', 1);
-      */
-
-     /* const label = g
-        .append('text')
-        .attr('class', 'attack-label')
-        //@ts-ignore
-        .attr('x', projection(country.coords)[0]) // Set x position
-        //@ts-ignore
-        .attr('y', projection(country.coords)[1] + 12) // Move down by 12px
-        .text(country.name)
-        .style('opacity', 0); // Start with 0 opacity
-
-
-        const circle = g
-        .append('circle')
-        .attr('class', 'attack-circle')
-        //@ts-ignore
-        .attr('cx', projection(country?.coords)[0])
-        //@ts-ignore
-        .attr('cy', projection(country?.coords)[1])
-        .attr('r', 5) // Circle radius set to 2px
-        .style('opacity', 0); // Start with 0 opacity
-*/
-      const path = g
+      const path = animationGroup
         .append('path')
         .datum(arcData)
         .attr('class', 'arc')
         //@ts-ignore
         .attr('d', d3.line().curve(d3.curveBasis)) // Curved lines with curveBasis
-        .attr('stroke-dasharray', function () {
-          const length = this.getTotalLength();
-          return length + ' ' + length;
+        .attr('stroke-dasharray', function(this: SVGPathElement) {
+          return `${this.getTotalLength()} ${this.getTotalLength()}`;
         })
-        .attr('stroke-dashoffset', function () {
+        .attr('stroke-dashoffset', function(this: SVGPathElement) {
           return this.getTotalLength();
         });
         
@@ -149,19 +125,19 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           });
           markerGroup.transition().duration(0).style('opacity', 1);
           
-          label.transition().duration(0).style('opacity', 1);
+         label.transition().duration(0).style('opacity', 1);
 
-          circle.transition().duration(2).style('opacity', 1);
+         circle.transition().duration(2).style('opacity', 1);
         })
         .on('end', function () {
-          markerGroup.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
+          animationGroup.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
 
           circle.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
 
           path.transition().duration(1000).ease(d3.easeSinInOut).style('opacity', 0).remove();
         });
     }
-
+  
     function socketCreate() {
 
         if(socket)
@@ -220,7 +196,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       //};
     }
 
-
+    
     // Create SVG container
     const svg = d3
     .select('svg[id="map"]')
@@ -282,6 +258,9 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       .translate([2.3 * width, 3.5 * height]);
 
     const g = svg.append('g');
+    
+    mapGroupRef.current = g;
+    
     const path = d3.geoPath().projection(projection);
 
      
@@ -294,7 +273,9 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       })
      .on('zoom', (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
       //svg.select('g').attr('transform', event.transform.toString());
-      g.attr('transform', event.transform.toString());
+      if (mapGroupRef.current) {
+        mapGroupRef.current.attr('transform', event.transform.toString());
+      }
     //  setProjection(event);
     
      });
@@ -534,8 +515,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     };
 
   socketCreate();
-  startSimulations();
-  displayTimer();
+  //startSimulations();
+  //displayTimer();
 
      // Cleanup
      return () => {
@@ -546,8 +527,9 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
 
 
   const handleZoomIn = () => {
+    console.log('handleZoomIn');
     if (!ref.current || !zoomRef.current) return;    
-
+    console.log('handleZoomIn -> in');
     const svg = d3.select<SVGSVGElement, unknown>(ref.current);
     const transform = d3.zoomTransform(svg.node()!);
     
@@ -563,7 +545,11 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   };
 
   const handleZoomOut = () => {
+    console.log('handleZoomOut');
     if (!ref.current || !zoomRef.current) return;
+    console.log('handleZoomOut -> in');
+
+
     const svg = d3.select<SVGSVGElement, unknown>(ref.current);
     const transform = d3.zoomTransform(svg.node()!);
     
