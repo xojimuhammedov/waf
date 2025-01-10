@@ -26,6 +26,7 @@
   stroke: #058841; /* Border color */
   stroke-width: 0.5px;
   cursor: pointer; /* Change cursor on hover */
+  
 }
 
 .country-hover {
@@ -41,7 +42,8 @@
   stroke: #fff;
   stroke-width: 2px; /* Decreased attack lines width */
   fill: none;
-  opacity: 0.6;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 5px #0ff);
 }
 
 .marker-group {
@@ -59,6 +61,7 @@
   fill: #60A5FA;
   stroke: #fff;
   stroke-width: 1px;
+  z-index: 100;
 }
 
 .attack-label {
@@ -89,10 +92,14 @@
 
 /* Time display */
 .time-display {
-  fill: #0ff;
+  color: #0ff;
   font-family: 'Courier New', monospace;
-  font-size: 18px;
+  font-size: 22px;
   filter: drop-shadow(0 0 5px #0ff);
+  bottom: 250px;
+  left: 20px;
+  z-index: 100;
+  opacity: 0.7;
 }
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import type { Selection } from 'd3';
 //@ts-ignore
@@ -8,6 +8,7 @@ import { io } from 'socket.io-client';
 import config from 'configs';
 import dayjs from 'dayjs';
 import { MapPin } from 'lucide-react';
+import { current } from 'tailwindcss/colors';
 
 
 var socket : any;
@@ -23,27 +24,56 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const mapGroupRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const animationGroupRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const projectionRef = useRef<d3.GeoProjection>();
+  const [isGlobeView, setIsGlobeView] = useState(false);
 
+ // Map initialization effect
   useEffect(() => {
     if (ref.current) {
-      initMap(ref.current);
-    }
-    return () => {
-      if (animationGroupRef.current) {
+      // Clear previous map/globe
+      if (mapGroupRef.current) {
+        mapGroupRef.current.selectAll('*').remove();
+       // @ts-ignore
         animationGroupRef.current.selectAll('*').remove();
+        d3.select(ref.current).selectAll("*").remove();
+        
+      }
+
+      // Initialize based on current view type
+      if (isGlobeView) {
+        initGlobus(ref.current);
+      } else {
+        initMap(ref.current);
+      }
+    }
+
+    return () => {
+      if (mapGroupRef.current) {
+        mapGroupRef.current.selectAll('*').remove();
+        d3.select(ref.current).selectAll("*").remove();
+        // @ts-ignore
+        animationGroupRef.current.selectAll('*').remove();
+        
       }
     };
-  }, []);
+  }, [isGlobeView]); // Re-run when view type changes
+
+  const toggleView = () => {
+    setIsGlobeView(prev => !prev);
+  };
 
   const initMap = (container: SVGSVGElement) => {
-    const width = container.width.baseVal.value;
-    const height = container.height.baseVal.value;
-
+ 
     const svg = d3
       .select(container)
       .attr('width', '100%')
-      .attr('height', '90%')
+      .attr('height', '100%')
       .style('background-color', 'transparent');
+
+      const width = container.width.animVal.value;
+      const height = container.height.animVal.value;
+      const mapWidth = width/2;
+      const mapHeight = height/1.7;
+      const mapScale = height/4.5;
 
     // Create main container group for all content
     const mainGroup = svg.append('g').attr('class', 'main-container');
@@ -59,8 +89,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     // Store projection in ref for reuse in animations
     projectionRef.current = d3
       .geoMercator()
-      .scale(190)
-      .translate([2.3 * width, 3.5 * height]);
+      .scale(mapScale)
+      .translate([mapWidth, mapHeight]);
 
     const path = d3.geoPath().projection(projectionRef.current);
 
@@ -82,6 +112,31 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     // @ts-ignore  
     const countries = topojson.feature(worldData, worldData.objects.countries).features;
 
+    // Background grid effect
+    const gridSize = 30;
+    const gridOpacity = 0.1;
+
+    mainGroup.append('defs')
+        .append('pattern')
+        .attr('id', 'grid')
+        .attr('width', gridSize)
+        .attr('height', gridSize)
+        .attr('patternUnits', 'userSpaceOnUse')
+        .append('path')
+        .attr('d', `M ${gridSize} 0 L 0 0 0 ${gridSize}`)
+        .style('fill', 'none')
+        .style('stroke', '#0ff')
+        .style('stroke-width', '0.5')
+        .style('opacity', gridOpacity);
+
+    svg.append('rect')
+        .attr('width', '100%')
+        .attr('height', '100%')
+        .attr('z-index', '-10')
+        .style('fill', 'url(#grid)')
+        .style('pointer-events', 'none'); // Hodisalarni blokirovka qiladi
+
+
       mapGroup
         .selectAll('path')
         .data(countries)
@@ -99,14 +154,145 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     });
   
     socketCreate();
-    displayTimer(svg);
-   // startSimulations();
   
     return () => {
       svg.on('.zoom', null);
     };
   }
 
+
+  const initGlobus = (container: SVGSVGElement) => {
+    const svg = d3
+      .select(container)
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('background-color', 'transparent');
+
+    const width = container.width.animVal.value;
+    const height = container.height.animVal.value;
+    const mapWidth = width/2;
+    const mapHeight = height/2.5;
+    const mapScale = height/2.5;
+
+    // Create main container group for all content
+    const mainGroup = svg.append('g').attr('class', 'main-container');
+    // @ts-ignore
+    mapGroupRef.current = mainGroup;
+
+    // Create separate groups for map and animations
+    const mapGroup = mainGroup.append('g').attr('class', 'map-group');
+    const animationGroup = mainGroup.append('g').attr('class', 'animation-container');
+    // @ts-ignore
+    animationGroupRef.current = animationGroup;
+
+    projectionRef.current = d3.geoOrthographic()
+    .scale(mapScale)
+    .translate([mapWidth, mapHeight])
+    .rotate([0, 30])
+    .clipAngle(90);
+
+    const path = d3.geoPath().projection(projectionRef.current);
+    
+    // Add water background
+    mapGroup.append('circle')
+    .attr('cx', mapWidth)
+    .attr('cy', mapHeight)
+    .attr('r', mapScale)
+    .attr('class', 'ocean');
+
+
+       // Add rotation
+    let rotate = [0, -10];
+    const sensitivity = 10;
+
+    // Auto rotation
+    d3.timer((elapsed) => {
+      rotate[0] = elapsed / 100;
+      // @ts-ignore
+      projectionRef.current.rotate(rotate as any);
+      mapGroup.selectAll('path').attr('d', path as any);
+    });
+
+    // Add dragging interaction
+    // @ts-ignore
+    mapGroup.call(d3.drag()
+      .on('drag', (event) => {
+        rotate[0] = rotate[0] + event.dx / sensitivity;
+        rotate[1] = rotate[1] - event.dy / sensitivity;
+        rotate[1] = rotate[1] > 50 ? 50 :
+                   rotate[1] < -50 ? -50 : rotate[1];
+                   // @ts-ignore
+                   projectionRef.current.rotate(rotate as any);
+                   mapGroup.selectAll('path').attr('d', path as any);
+      }));
+
+    // Add zoom behavior
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([1, 8])
+      .filter((event) => {
+        return !event.ctrlKey && !event.button && event.type !== 'wheel';
+      })
+      .on('zoom', (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
+        mainGroup.attr('transform', event.transform.toString());
+      });
+
+    zoomRef.current = zoom;
+    svg.call(zoom);
+
+    // Load and render map - only once
+    d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json').then((worldData: any) => {
+    // @ts-ignore  
+    const countries = topojson.feature(worldData, worldData.objects.countries).features;
+
+    // Background grid effect
+    const gridSize = 30;
+    const gridOpacity = 0.1;
+
+    svg.append('defs')
+        .append('pattern')
+        .attr('id', 'grid')
+        .attr('width', gridSize)
+        .attr('height', gridSize)
+        .attr('patternUnits', 'userSpaceOnUse')
+        .append('path')
+        .attr('d', `M ${gridSize} 0 L 0 0 0 ${gridSize}`)
+        .style('fill', 'none')
+        .style('stroke', '#0ff')
+        .style('stroke-width', '0.5')
+        .style('opacity', gridOpacity);
+
+    svg.append('rect')
+        .attr('width', '100%')
+        .attr('height', '100%')
+        .attr('z-index', '-10')
+        .style('fill', 'url(#grid)')
+        .style('pointer-events', 'none'); // Hodisalarni blokirovka qiladi
+
+
+      mapGroup
+        .selectAll('path')
+        .data(countries)
+        .enter()
+        .append('path')
+        .attr('class', (d: any) => (d.id === '860' ? 'country country-target' : 'country'))
+        .attr('d', path as any)
+        .attr('id', (d: any) => d.id)
+        .on('mouseover', function() {
+          d3.select(this).attr('class', 'country country-hover');
+        })
+        .on('mouseout', function(this: any, event: any, d: any) {
+          d3.select(this).attr('class', d.id === '860' ? 'country country-target' : 'country');
+        });
+    });
+  
+    socketCreate();
+  
+    return () => {
+      svg.on('.zoom', null);
+    };
+  }
+ 
+ 
   function socketCreate() {
 
     if(socket)
@@ -165,7 +351,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   //return () => {
   // socket.disconnect();
   //};
-}
+  }
 
   //var isSimulating : boolean = false;
   //var intervalId : any;
@@ -341,23 +527,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           );
   };
 
-  function displayTimer(svg: any)
-    {
-        // Add local time display
-        const timeDisplay = svg.append('text')
-        .attr('x', "8%")
-        .attr('y', "77%")
-        .attr('text-anchor', 'end')
-        .attr('class', 'time-display');
-
-        // Update time
-        function updateTime() {
-        const now = new Date();
-        timeDisplay.text(now.toLocaleTimeString('uz-UZ', { hour12: false }));
-        }
-        setInterval(updateTime, 1000);
-    }
-
+ 
   const animateArc = (country: any, i: number) => {
     if (!projectionRef.current || !animationGroupRef.current) return;
    
@@ -372,7 +542,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     };
 
     // Clear previous animation for this index
-    animationGroupRef.current.selectAll(`.arc-group-${i}`).remove();
+   // animationGroupRef.current.selectAll(`.arc-group-${i}`).remove();
 
     const arcData = createArc(country?.coords, uzbekistanCoords);
 
@@ -403,10 +573,10 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       const circle = markerGroup
       .append('circle')
       .attr('class', 'attack-circle')
-      .attr('cx', 6)
-      .attr('cy', 2)
+      .attr('cx', 0)
+      .attr('cy', 0)
       .attr('r', 8)
-      .style('opacity', 0);
+      .style('opacity', 0); 
 
       // Add text (country name)
       const countryName = markerGroup
@@ -424,10 +594,34 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       .attr('y', 12)
       .text(country.ip_address);
 
+      // Define the gradient
+      const gradient = arcGroup
+      .append("defs")
+      .append("linearGradient")
+      .attr("id", "arcGradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "100%")
+      .attr("y2", "0%");
+
+      // Add gradient stops
+      gradient
+      .append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#4CAF50")
+      .attr("stop-opacity", 1);
+
+      gradient
+      .append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "#2196F3")  
+      .attr("stop-opacity", 1);
+
     const path = arcGroup
       .append('path')
       .datum(arcData)
       .attr('class', 'arc')
+      .style("stroke", "url(#arcGradient)")
       // @ts-ignore
       .attr('d', d3.line().curve(d3.curveBasis))
       .attr('stroke-dasharray', function(this: SVGPathElement) {
@@ -450,18 +644,21 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
           date: country?.time_stamp,
           ip_address: country?.ip_address
         });
+        
         markerGroup.transition().duration(0).style('opacity', 1);
         circle.transition().duration(0).style('opacity', 1);
       })
       .on('end', function() {
-        arcGroup.remove();
+        //arcGroup.remove();
+        markerGroup.transition().duration(0).style('opacity', 0);
+        circle.transition().duration(0).style('opacity', 0);
+        path.transition().duration(0).style('opacity', 0);
       });   
   };
 
   const handleZoomIn = () => {
-    console.log('handleZoomIn');
     if (!ref.current || !zoomRef.current) return;    
-    console.log('handleZoomIn -> in');
+  
     const svg = d3.select<SVGSVGElement, unknown>(ref.current);
     const transform = d3.zoomTransform(svg.node()!);
     
@@ -477,11 +674,8 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   };
 
   const handleZoomOut = () => {
-    console.log('handleZoomOut');
     if (!ref.current || !zoomRef.current) return;
-    console.log('handleZoomOut -> in');
-
-
+ 
     const svg = d3.select<SVGSVGElement, unknown>(ref.current);
     const transform = d3.zoomTransform(svg.node()!);
     
@@ -505,26 +699,93 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         <div className="flex gap-2 mb-2">
           <button
             onClick={handleZoomIn}
-            className="w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
-            style={{ borderColor: '#454545' }}
-          >
-            +
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 hover:bg-gray-700/50 text-[#454545] rounded-lg transition-all duration-300 backdrop-blur-sm">
+           <svg 
+          className="w-6 h-6" 
+          viewBox="0 0 28 28" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="1"
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        >
+         <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="16" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
           </button>
           <button
             onClick={handleZoomOut}
-            className="w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
-            style={{ borderColor: '#454545' }}
-          >
-            -
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 hover:bg-gray-700/50 rounded-lg text-[#454545] transition-all duration-300 backdrop-blur-sm">
+            <svg 
+          className="w-6 h-6" 
+          viewBox="0 0 28 28" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="1"
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        >
+         <circle cx="12" cy="12" r="10" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
           </button>
 
           <button
             onClick={startSimulations}
-            className="w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
-            style={{ borderColor: '#454545' }}
-          >
-            s
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 hover:bg-gray-700/50 text-[#454545] rounded-lg transition-all duration-300 backdrop-blur-sm">
+           <svg 
+                className="w-6 h-6" 
+                viewBox="0 0 28 28" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="1"
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+               
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+                <line x1="22" y1="12" x2="18" y2="12" />
+                <line x1="6" y1="12" x2="2" y2="12" />
+                <line x1="12" y1="6" x2="12" y2="2" />
+                <line x1="12" y1="22" x2="12" y2="18" />
+             </svg>
           </button>
+
+          <button 
+      onClick={toggleView}
+      className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 hover:bg-gray-700/50 text-[#454545] rounded-lg transition-all duration-300 backdrop-blur-sm">
+      {isGlobeView ? (
+        <>
+          <svg 
+            className="w-5 h-5" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1"
+          >
+            <path d="M3 7h18M3 12h18M3 17h18"/>
+            <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/>
+          </svg>
+        </>
+      ) : (
+        <>
+          <svg 
+            className="w-5 h-5" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1"
+          >
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </>
+      )}
+    </button>
         </div>
       </div>
     </div>

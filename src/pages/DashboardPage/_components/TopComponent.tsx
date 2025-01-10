@@ -1,20 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import D3Map from '../../../components/Molecules/3d/D3Map';
 import dayjs from 'dayjs';
 import { forEach } from 'lodash';
 
 function TopComponent() {
   const [attackCountries, setAttackCountries] = useState<object[]>([]);
+  const [currentTime, setRealTime] = useState<string>('');
+
+  useEffect(() => {
+    // Dastlabki vaqtni o'rnatish
+    updateTime();
+    
+    // Har sekundda yangilab turish
+    const timer = setInterval(() => {
+      updateTime();
+    }, 1000);
+
+    // Component unmount bo'lganda intervalni tozalash
+    return () => clearInterval(timer);
+  }, []);
+
+  // Vaqtni yangilash funksiyasi
+  const updateTime = () => {
+    const now = new Date();
+    setRealTime(now.toLocaleTimeString('uz-UZ', { hour12: false }));
+  };
 
   const handleAttackCountriesChange = (country: object) => {
     setAttackCountries((prevCountries) => {
-      const updatedCountries = [country, ...prevCountries]; // Yangi massiv yaratamiz
-      console.log(updatedCountries);
-      return updatedCountries.slice(0, 4); // Faqat oxirgi 4 elementni saqlaymiz
+      const updatedCountries = [country, ...prevCountries]; // Yangi massiv yaratadi
+      
+      return updatedCountries.slice(0, 4); // Faqat oxirgi 4 elementni saqlaydi
     });
   }
 
-  // console.log(attackCountries)
+   // console.log(attackCountries)
 
   return (
      <div className={'h-full relative'} >
@@ -32,6 +52,9 @@ function TopComponent() {
             </div>
           </div>
         </div>)}
+      </div>
+      <div className={'absolute h-[50px] w-[200px] time-display'}>
+        {currentTime}
       </div>
       <D3Map setAttackCountries={handleAttackCountriesChange} />
     </div>
