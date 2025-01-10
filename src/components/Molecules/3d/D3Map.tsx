@@ -25,18 +25,12 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const animationGroupRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const projectionRef = useRef<d3.GeoProjection>();
   const [isGlobeView, setIsGlobeView] = useState(false);
+  const timerRef = useRef(null);
 
  // Map initialization effect
   useEffect(() => {
     if (ref.current) {
-      // Clear previous map/globe
-      if (mapGroupRef.current) {
-        mapGroupRef.current.selectAll('*').remove();
-       // @ts-ignore
-        animationGroupRef.current.selectAll('*').remove();
-        d3.select(ref.current).selectAll("*").remove();
-        
-      }
+      
 
       // Initialize based on current view type
       if (isGlobeView) {
@@ -45,14 +39,21 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         initMap(ref.current);
       }
     }
-
+  
+  
     return () => {
       if (mapGroupRef.current) {
         mapGroupRef.current.selectAll('*').remove();
         d3.select(ref.current).selectAll("*").remove();
         // @ts-ignore
-        animationGroupRef.current.selectAll('*').remove();
+        animationGroupRef.current.selectAll('*').remove();   
         
+        if (timerRef.current) {
+        // @ts-ignore
+          timerRef.current.stop();
+          timerRef.current = null;
+        }
+
       }
     };
   }, [isGlobeView]); // Re-run when view type changes
@@ -202,11 +203,13 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
 
 
        // Add rotation
-    let rotate = [0, -10];
+    let rotate = [0, -30];
     const sensitivity = 10;
-
     // Auto rotation
-    d3.timer((elapsed) => {
+    // @ts-ignore
+    timerRef.current = d3.timer((elapsed) => {
+
+      console.log('rotating')
       rotate[0] = elapsed / 100;
       // @ts-ignore
       projectionRef.current.rotate(rotate as any);
