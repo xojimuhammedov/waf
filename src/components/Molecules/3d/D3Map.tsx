@@ -17,12 +17,20 @@ type D3MapProps = {
 const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
   const ref = useRef<SVGSVGElement>(null);
   const zoomRef = useRef<any>(null);
+  const flagGroupRef = useRef<any>(null);
   const mapGroupRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const animationGroupRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const projectionRef = useRef<d3.GeoProjection>();
   const [isGlobeView, setIsGlobeView] = useState(false);
   const timerRef = useRef(null);
   const activeArcsRef = useRef<any[]>([]);
+
+
+  const TARGET_COUNTRY = {
+    coords: [69.2401, 41.2995],
+    name: 'Uzbekistan'
+  };
+
 
   useEffect(() => {
     if (ref.current) {
@@ -41,6 +49,7 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         mapGroupRef.current.selectAll('*').remove();
         d3.select(ref.current).selectAll("*").remove();
         animationGroupRef.current?.selectAll('*').remove();   
+        flagGroupRef.current?.selectAll('*').remove();   
         
         if (timerRef.current) {
           // @ts-ignore  
@@ -145,6 +154,9 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         .on('mouseout', function(this: any, event: any, d: any) {
           d3.select(this).attr('class', d.id === '860' ? 'country country-target' : 'country');
         });
+
+        // Create target flag after map is loaded
+        flagGroupRef.current = createTargetFlag(mapGroup, projectionRef.current);
     });
   
    
@@ -205,6 +217,9 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
       activeArcsRef.current.forEach(arcData => {
         updateArcAndMarker(arcData);
       });
+
+      // Update flag position
+      updateTargetFlag(flagGroupRef.current, projectionRef.current);
     });
 
     // Modified drag behavior to update arcs
@@ -281,6 +296,11 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
         .on('mouseout', function(this: any, event: any, d: any) {
           d3.select(this).attr('class', d.id === '860' ? 'country country-target' : 'country');
         });
+
+        // Create target flag after map is loaded
+        flagGroupRef.current = createTargetFlag(mapGroup, projectionRef.current);
+
+
     });
   
   
@@ -340,6 +360,82 @@ const D3Map: React.FC<D3MapProps> = ({ setAttackCountries }) => {
     ];
   };
 
+  const createTargetFlag = (mapGroup: any, projection: any) => {
+    // Define gradient for glow effect
+    const defs = mapGroup.append("defs");
+    
+    const glowGradient = defs.append("radialGradient")
+      .attr("id", "flag-glow")
+      .attr("cx", "50%")
+      .attr("cy", "50%")
+      .attr("r", "50%");
+
+    glowGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#00ff00")
+      .attr("stop-opacity", 0.3);
+
+    glowGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "#00ff00")
+      .attr("stop-opacity", 0);
+
+    const projectedCoords = projection(TARGET_COUNTRY.coords);
+    
+    const flagGroup = mapGroup
+      .append('g')
+      .attr('class', 'target-flag')
+      .attr('transform', `translate(${projectedCoords[0]}, ${projectedCoords[1]})`);
+
+    // Add glow effect
+    flagGroup.append('circle')
+      .attr('r', 5)
+      .attr('fill', 'url(#flag-glow)');
+
+    // Add base circle
+    flagGroup.append('circle')
+      .attr('r', 5)
+      .attr('fill', '#1a1a1a')
+      .attr('stroke', '#00ff00')
+      .attr('stroke-width', 1);
+
+
+    // Add pulsing animation
+    const pulse = flagGroup.append('circle')
+      .attr('r', 10)
+      .attr('fill', 'none')
+      .attr('stroke', '#00ff00')
+      .attr('stroke-width', 1)
+      .attr('opacity', 0.5);
+
+    function doPulse() {
+      pulse.transition()
+        .duration(2000)
+        .attr('r', 25)
+        .attr('opacity', 0)
+        .transition()
+        .duration(0)
+        .attr('r', 10)
+        .attr('opacity', 0.5)
+        .on('end', doPulse);
+    }
+
+    doPulse();
+
+    return flagGroup;
+  };
+
+  const updateTargetFlag = (flagGroup: any, projection: any) => {
+    if (!projection) return;
+
+    const projectedCoords = projection(TARGET_COUNTRY.coords);
+    //@ts-ignore
+    const isVisible = d3.geoDistance(TARGET_COUNTRY.coords, [-projection.rotate()[0], -projection.rotate()[1]]) < Math.PI / 2;
+
+    flagGroup
+      .attr('transform', `translate(${projectedCoords[0]}, ${projectedCoords[1]})`)
+      .style('opacity', isVisible ? 1 : 0);
+  };
 
   function socketCreate() {
 
@@ -578,7 +674,6 @@ const countriesPool = [
   const animateArc = (country: any, i: number) => {
     if (!projectionRef.current || !animationGroupRef.current) return;
    
-    const uzbekistanCoords: [number, number] = [69.2401, 41.2995];
     const sourceCoords: [number, number] = country.coords;
     
     const arcGroup = animationGroupRef.current
@@ -654,7 +749,8 @@ const countriesPool = [
       .attr("stop-color", "#2196F3")  
       .attr("stop-opacity", 1);
 
-    const pathData = createArc(sourceCoords, uzbekistanCoords);
+    //@ts-ignore
+    const pathData = createArc(sourceCoords, TARGET_COUNTRY.coords);
     
     const path = arcGroup
       .append('path')
@@ -673,7 +769,7 @@ const countriesPool = [
     // Store arc data for updates during rotation
     const arcData = {
       sourceCoords,
-      targetCoords: uzbekistanCoords,
+      targetCoords: TARGET_COUNTRY.coords,
       arcGroup,
       markerGroup,
       path
@@ -684,12 +780,12 @@ const countriesPool = [
     setTimeout(() => {
       activeArcsRef.current = activeArcsRef.current.filter(d => d !== arcData);
       arcGroup.remove();
-    }, 3000);
+    }, 5000);
 
    path
       .transition()
       .delay(i * 500)
-      .duration(3000)
+      .duration(4000)
       .ease(d3.easeSinInOut)
       .attr('stroke-dashoffset', 0)
       .on('start', function() {
@@ -710,7 +806,6 @@ const countriesPool = [
         path.transition().duration(0).style('opacity', 0);
       });  
   };
-
   
   const handleZoomIn = () => {
     if (!ref.current || !zoomRef.current) return;    
